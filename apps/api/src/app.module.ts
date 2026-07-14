@@ -1,7 +1,17 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { envValidationSchema } from './config/env.validation';
+import appConfig from './config/app.config';
 
 @Module({
-  imports: [],
+  imports: [
+  ConfigModule.forRoot({
+    isGlobal: true,
+    envFilePath: '.env',
+    validationSchema: envValidationSchema,
+    load: [appConfig],  
+  }),
+  ],
   controllers: [],
   providers: [],
 })
