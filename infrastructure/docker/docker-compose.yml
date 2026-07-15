@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:17
+
+    container_name: xeeo-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: xeeo
+      POSTGRES_PASSWORD: xeeo_password
+      POSTGRES_DB: xeeo_db
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xeeo -d xeeo_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
