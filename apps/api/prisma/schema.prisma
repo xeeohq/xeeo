@@ -6,12 +6,89 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  username  String   @unique
-  fullName  String
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+  SUPER_ADMIN
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum UserStatus {
+  ACTIVE
+  PENDING_VERIFICATION
+  SUSPENDED
+  BANNED
+  DELETED
+}
+
+model User {
+  id              String      @id @default(cuid())
+
+  username        String      @unique
+  email           String      @unique
+  passwordHash    String?
+
+  emailVerified   Boolean     @default(false)
+
+  role            UserRole    @default(USER)
+  status          UserStatus  @default(PENDING_VERIFICATION)
+
+  lastLoginAt     DateTime?
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  deletedAt       DateTime?
+
+  profile         Profile?
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum ExperienceLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  PROFESSIONAL
+}
+
+enum Availability {
+  AVAILABLE
+  BUSY
+  LOOKING_FOR_TEAM
+  NOT_AVAILABLE
+}
+
+model Profile {
+  id                String             @id @default(cuid())
+
+  userId            String             @unique
+
+  displayName       String
+
+  avatarUrl         String?
+  bannerUrl         String?
+  bio               String?
+
+  location          String?
+
+  website           String?
+  portfolioUrl      String?
+
+  githubUsername    String?
+  linkedinUrl       String?
+  twitterUrl        String?
+
+  skills            Json?
+
+  experienceLevel   ExperienceLevel    @default(BEGINNER)
+  availability      Availability       @default(AVAILABLE)
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([displayName])
+  @@index([githubUsername])
 }

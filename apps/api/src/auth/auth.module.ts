@@ -13,8 +13,8 @@ import { AuthService } from './auth.service';
       useFactory: (configService: ConfigService) => ({
         secret: configService.getOrThrow<string>('app.jwt.secret'),
 
-signOptions: {
-  expiresIn: configService.getOrThrow('app.jwt.expiresIn'),
+        signOptions: {
+          expiresIn: configService.getOrThrow('app.jwt.expiresIn'),
         },
       }),
     }),
