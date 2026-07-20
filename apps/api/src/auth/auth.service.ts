@@ -31,6 +31,7 @@ async register(registerDto: RegisterDto) {
       email: registerDto.email,
       username: registerDto.username,
       passwordHash,
+      displayName: registerDto.displayName,
     });
 
     return user;

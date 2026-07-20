@@ -7,6 +7,7 @@ type CreateUserData = {
   email: string;
   username: string;
   passwordHash: string;
+  displayName: string;
 };
 
 @Injectable()
@@ -14,9 +15,24 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateUserData): Promise<User> {
-    return this.prisma.user.create({
-      data,
+    const { displayName, ...userData } = data;
+
+    const user = await this.prisma.$transaction(async (tx) => {
+      const createdUser = await tx.user.create({
+        data: userData,
+      });
+
+      await tx.profile.create({
+        data: {
+          userId: createdUser.id,
+          displayName,
+        },
+      });
+
+      return createdUser;
     });
+
+    return user;
   }
 
   async findByEmail(email: string): Promise<User | null> {
