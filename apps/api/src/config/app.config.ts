@@ -7,6 +7,6 @@ export default registerAs('app', () => ({
 
   jwt: {
     secret: process.env.JWT_SECRET,
-    expiresIn: '15m',
+    expiresIn: process.env.JWT_EXPIRES_IN,
   },
 }));
