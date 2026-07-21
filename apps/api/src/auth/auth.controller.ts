@@ -3,33 +3,42 @@ import {
   Controller,
   Get,
   Post,
-  Req,
+  HttpCode,
+  HttpStatus,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
 
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-
+import { CurrentUser } from './decorators/current-user.decorator';
+import type { JwtUser } from './interfaces/jwt-user.interface';
+import { Public } from './decorators/public.decorator';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('register')
   register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
+  @Public()
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  logout() {
+    return this.authService.logout();
+  }
+
   @Get('me')
-  getMe(@Req() req: any) {
-    return req.user;
+  getMe(@CurrentUser() user: JwtUser) {
+    return user;
   }
 }

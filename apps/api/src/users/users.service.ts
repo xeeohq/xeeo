@@ -2,6 +2,7 @@ import { User } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma';
+import { userWithProfileInclude } from './constants/user.include';
 
 type CreateUserData = {
   email: string;
@@ -14,7 +15,7 @@ type CreateUserData = {
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateUserData): Promise<User> {
+  async create(data: CreateUserData) {
     const { displayName, ...userData } = data;
 
     const user = await this.prisma.$transaction(async (tx) => {
@@ -29,33 +30,41 @@ export class UsersService {
         },
       });
 
-      return createdUser;
+      return tx.user.findUniqueOrThrow({
+        where: {
+          id: createdUser.id,
+        },
+        include: userWithProfileInclude,
+      });
     });
 
     return user;
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: {
         email,
       },
+      include: userWithProfileInclude,
     });
   }
 
-  async findByUsername(username: string): Promise<User | null> {
+  async findByUsername(username: string) {
     return this.prisma.user.findUnique({
       where: {
         username,
       },
+      include: userWithProfileInclude,
     });
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string) {
     return this.prisma.user.findUnique({
       where: {
         id,
       },
+      include: userWithProfileInclude,
     });
   }
 }

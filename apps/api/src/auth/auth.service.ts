@@ -9,6 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import type { JwtPayload } from './interfaces/jwt-payload.interface';
+import { UserMapper } from '../users/mappers/user.mapper';
 
 @Injectable()
 export class AuthService {
@@ -43,7 +45,7 @@ export class AuthService {
       displayName: registerDto.displayName,
     });
 
-    return user;
+    return UserMapper.toResponse(user);
   }
 
   async login(loginDto: LoginDto) {
@@ -62,7 +64,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password.');
     }
 
-    const payload = {
+    const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
       role: user.role,
@@ -70,12 +72,15 @@ export class AuthService {
 
     const accessToken = await this.jwtService.signAsync(payload);
 
-    const { passwordHash, ...safeUser } = user;
-
     return {
       accessToken,
       tokenType: 'Bearer',
-      user: safeUser,
+      user: UserMapper.toResponse(user),
+    };
+  }
+  logout() {
+    return {
+      message: 'Logged out successfully.',
     };
   }
 }
