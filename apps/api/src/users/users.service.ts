@@ -1,7 +1,11 @@
-import { User } from '@prisma/client';
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { PrismaService } from '../prisma';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { userWithProfileInclude } from './constants/user.include';
 
 type CreateUserData = {
@@ -66,5 +70,43 @@ export class UsersService {
       },
       include: userWithProfileInclude,
     });
+  }
+
+  async findByIdOrThrow(id: string) {
+    const user = await this.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    return user;
+  }
+
+  async updateProfile(userId: string, updateProfileDto: UpdateProfileDto) {
+    const hasUpdates =
+      updateProfileDto.displayName !== undefined ||
+      updateProfileDto.bio !== undefined ||
+      updateProfileDto.avatarUrl !== undefined;
+
+    if (!hasUpdates) {
+      throw new BadRequestException('At least one field must be provided.');
+    }
+
+    await this.findByIdOrThrow(userId);
+
+    const { displayName, bio, avatarUrl } = updateProfileDto;
+
+    await this.prisma.profile.update({
+      where: {
+        userId,
+      },
+      data: {
+        displayName,
+        bio,
+        avatarUrl,
+      },
+    });
+
+    return this.findByIdOrThrow(userId);
   }
 }

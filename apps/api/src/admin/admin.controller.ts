@@ -8,7 +8,8 @@ import { Roles } from '../auth/decorators/roles.decorator';
 @Controller('admin')
 export class AdminController {
   @Get()
-  @UseGuards(RolesGuard)  @Roles(UserRole.ADMIN)
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
   getAdminDashboard() {
     return {
       message: 'Welcome Admin!',

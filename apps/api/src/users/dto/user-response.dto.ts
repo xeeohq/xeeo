@@ -1,5 +1,9 @@
 export class UserProfileResponseDto {
   displayName!: string;
+
+  bio!: string | null;
+
+  avatarUrl!: string | null;
 }
 
 export class UserResponseDto {

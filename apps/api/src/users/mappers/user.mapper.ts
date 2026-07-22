@@ -1,4 +1,3 @@
-
 import { User } from '@prisma/client';
 
 import {
@@ -11,13 +10,16 @@ export class UserMapper {
     user: User & {
       profile?: {
         displayName: string;
+        bio: string | null;
+        avatarUrl: string | null;
       } | null;
     },
   ): UserResponseDto {
     const profile = new UserProfileResponseDto();
 
-    profile.displayName =
-      user.profile?.displayName ?? '';
+    profile.displayName = user.profile?.displayName ?? '';
+    profile.bio = user.profile?.bio ?? null;
+    profile.avatarUrl = user.profile?.avatarUrl ?? null;
 
     const response = new UserResponseDto();
 
