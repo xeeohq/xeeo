@@ -609,3 +609,165 @@ docs/system/03-API-Design.md
 ```
 
 This document defines API conventions, versioning, endpoint structure, request/response formats, pagination, filtering, error handling, and REST principles that every XEEO service will follow.
+
+---
+
+# Implementation Status
+
+This document defines the target authentication architecture for XEEO. The sections below track the implementation progress of the Authentication module.
+
+## Sprint 1 Implementation
+
+### Completed ✅
+
+#### User Registration
+
+- User registration endpoint
+- Input validation using `class-validator`
+- Password hashing with Argon2
+- User creation
+- Profile creation
+- Duplicate email validation
+- Duplicate username validation
+
+#### Authentication
+
+- JWT-based authentication
+- Login endpoint
+- Logout endpoint
+- JWT Strategy
+- JWT Guard
+- Protected routes
+
+#### Authorization
+
+- Role-Based Access Control (RBAC)
+- Roles decorator
+- Roles guard
+- CurrentUser decorator
+- Route-level authorization
+
+#### User Module
+
+- Get current authenticated user (`GET /users/me`)
+- Update current user's profile (`PATCH /users/me`)
+
+#### Profile Management
+
+Supported profile fields:
+
+- Display Name
+- Bio
+- Avatar URL
+
+Validation rules:
+
+- Display name: 2–50 characters
+- Bio: maximum 500 characters
+- Avatar URL must be a valid URL
+- Empty PATCH requests are rejected
+- Bio can be cleared using an empty string
+
+#### Quality
+
+- DTO validation
+- Service-layer validation
+- Route protection
+- API testing completed
+
+Status:
+
+✅ Completed
+
+---
+
+## Planned Authentication Features
+
+The following features remain part of the Version 1.0 roadmap but have not yet been implemented.
+
+### Email Verification
+
+- Verification email
+- Verification token
+- Verify email endpoint
+
+Status:
+
+⬜ Planned
+
+---
+
+### Refresh Tokens
+
+- Refresh endpoint
+- Refresh token rotation
+- HttpOnly cookies
+- Token revocation
+
+Status:
+
+⬜ Planned
+
+---
+
+### Password Recovery
+
+- Forgot password
+- Reset password
+- Reset token expiration
+
+Status:
+
+⬜ Planned
+
+---
+
+### OAuth
+
+- Google OAuth
+- GitHub OAuth
+
+Status:
+
+⬜ Planned
+
+---
+
+### Future Enhancements
+
+- Two-Factor Authentication (2FA)
+- Passkeys (WebAuthn)
+- Enterprise SSO
+- Trusted Devices
+- Login History
+
+Status:
+
+⬜ Future
+
+---
+
+# Authentication Progress
+
+```text
+████████████████████░░░░░░░░░░░░░░░░░░░ 55%
+```
+
+| Feature | Status |
+|---------|--------|
+| Registration | ✅ |
+| Login | ✅ |
+| Logout | ✅ |
+| JWT Authentication | ✅ |
+| Route Protection | ✅ |
+| Authorization | ✅ |
+| Current User API | ✅ |
+| Profile Update API | ✅ |
+| Email Verification | ⬜ |
+| Refresh Tokens | ⬜ |
+| Password Reset | ⬜ |
+| Google OAuth | ⬜ |
+| GitHub OAuth | ⬜ |
+| 2FA | ⬜ |
+
+---

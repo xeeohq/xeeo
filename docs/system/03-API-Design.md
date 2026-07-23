@@ -16,6 +16,180 @@ Every API endpoint in XEEO must follow these guidelines.
 
 ---
 
+---
+
+# Implementation Status
+
+This document defines the API standards and conventions for XEEO.
+
+The following section tracks the implementation progress of the REST API while ensuring future endpoints continue following the standards defined in this document.
+
+---
+
+# API Implementation Progress
+
+## Sprint 1 — Backend Foundation
+
+### Authentication APIs
+
+| Endpoint | Method | Status |
+|----------|--------|--------|
+| `/auth/register` | POST | ✅ Implemented |
+| `/auth/login` | POST | ✅ Implemented |
+| `/auth/logout` | POST | ✅ Implemented |
+| `/auth/refresh` | POST | ⬜ Planned |
+| `/auth/forgot-password` | POST | ⬜ Planned |
+| `/auth/reset-password` | POST | ⬜ Planned |
+| `/auth/verify-email` | GET | ⬜ Planned |
+| `/auth/google` | GET | ⬜ Planned |
+| `/auth/github` | GET | ⬜ Planned |
+
+---
+
+### User APIs
+
+| Endpoint | Method | Status |
+|----------|--------|--------|
+| `/users/me` | GET | ✅ Implemented |
+| `/users/me` | PATCH | ✅ Implemented |
+| `/users/:id` | GET | ⬜ Planned |
+| `/users/:username` | GET | ⬜ Planned |
+| `/users` | GET | ⬜ Planned |
+
+---
+
+### Profile APIs
+
+| Endpoint | Method | Status |
+|----------|--------|--------|
+| Public Profile | ⬜ Planned |
+| Profile Search | ⬜ Planned |
+
+---
+
+# Sprint 2 Planned APIs
+
+The following APIs are expected to be implemented during Sprint 2.
+
+## Social Graph
+
+| Endpoint | Method | Status |
+|----------|--------|--------|
+| `/users/:username/follow` | POST | ⬜ Planned |
+| `/users/:username/follow` | DELETE | ⬜ Planned |
+| `/users/:username/followers` | GET | ⬜ Planned |
+| `/users/:username/following` | GET | ⬜ Planned |
+
+---
+
+# Upcoming Modules
+
+## Sprint 3
+
+Community
+
+- Community Posts
+- Comments
+- Likes
+- Bookmarks
+
+Status
+
+⬜ Planned
+
+---
+
+## Sprint 4
+
+Workspaces
+
+Status
+
+⬜ Planned
+
+---
+
+## Sprint 5
+
+Channels
+
+Status
+
+⬜ Planned
+
+---
+
+## Sprint 6
+
+Projects
+
+Status
+
+⬜ Planned
+
+---
+
+## Sprint 7
+
+Notifications
+
+Status
+
+⬜ Planned
+
+---
+
+## Sprint 8
+
+AI
+
+Status
+
+⬜ Planned
+
+---
+
+# API Progress
+
+```text
+████████████████░░░░░░░░░░░░░░░░░░░░░░░ 40%
+```
+
+| Module | Status |
+|---------|--------|
+| Authentication | ✅ |
+| Authorization | ✅ |
+| Users | ✅ |
+| Profiles | 🟡 |
+| Social Graph | ⬜ |
+| Community | ⬜ |
+| Workspaces | ⬜ |
+| Channels | ⬜ |
+| Projects | ⬜ |
+| Notifications | ⬜ |
+| AI | ⬜ |
+
+---
+
+# Documentation Policy
+
+This document serves two purposes:
+
+1. Define the REST API standards for XEEO.
+2. Track the implementation status of every API module.
+
+The API standards described in this document remain stable throughout Version 1.0.
+
+After every completed sprint, only the following sections should be updated:
+
+- API Implementation Progress
+- Planned APIs
+- API Progress
+
+All other architectural guidelines should remain unchanged unless the API architecture itself changes.
+
+---
+
 # Design Principles
 
 The API should be:
