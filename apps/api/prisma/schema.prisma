@@ -22,24 +22,28 @@ enum UserStatus {
 }
 
 model User {
-  id              String      @id @default(cuid())
+  id String @id @default(cuid())
 
-  username        String      @unique
-  email           String      @unique
-  passwordHash    String?
+  username     String  @unique
+  email        String  @unique
+  passwordHash String?
 
-  emailVerified   Boolean     @default(false)
+  emailVerified Boolean @default(false)
 
-  role            UserRole    @default(USER)
-  status          UserStatus  @default(PENDING_VERIFICATION)
+  role   UserRole   @default(USER)
+  status UserStatus @default(PENDING_VERIFICATION)
 
-  lastLoginAt     DateTime?
+  lastLoginAt DateTime?
 
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  deletedAt       DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
-  profile         Profile?
+  profile Profile?
+
+  // Social Graph
+  following Follow[] @relation("UserFollowing")
+  followers Follow[] @relation("UserFollowers")
 
   @@index([status])
   @@index([createdAt])
@@ -60,35 +64,52 @@ enum Availability {
 }
 
 model Profile {
-  id                String             @id @default(cuid())
+  id String @id @default(cuid())
 
-  userId            String             @unique
+  userId String @unique
 
-  displayName       String
+  displayName String
 
-  avatarUrl         String?
-  bannerUrl         String?
-  bio               String?
+  avatarUrl String?
+  bannerUrl String?
+  bio       String?
 
-  location          String?
+  location String?
 
-  website           String?
-  portfolioUrl      String?
+  website      String?
+  portfolioUrl String?
 
-  githubUsername    String?
-  linkedinUrl       String?
-  twitterUrl        String?
+  githubUsername String?
+  linkedinUrl    String?
+  twitterUrl     String?
 
-  skills            Json?
+  skills Json?
 
-  experienceLevel   ExperienceLevel    @default(BEGINNER)
-  availability      Availability       @default(AVAILABLE)
+  experienceLevel ExperienceLevel @default(BEGINNER)
+  availability    Availability    @default(AVAILABLE)
 
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([displayName])
   @@index([githubUsername])
+}
+
+model Follow {
+  id String @id @default(cuid())
+
+  followerId  String
+  followingId String
+
+  follower User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+
+  following User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
 }

@@ -20,9 +20,7 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
-    const existingUser = await this.usersService.findByEmail(
-      registerDto.email,
-    );
+    const existingUser = await this.usersService.findByEmail(registerDto.email);
 
     if (existingUser) {
       throw new BadRequestException('Email is already registered.');
@@ -78,7 +76,7 @@ export class AuthService {
       user: UserMapper.toResponse(user),
     };
   }
-  
+
   logout() {
     return {
       message: 'Logged out successfully.',
