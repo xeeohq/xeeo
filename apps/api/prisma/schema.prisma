@@ -21,6 +21,33 @@ enum UserStatus {
   DELETED
 }
 
+enum ExperienceLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  PROFESSIONAL
+}
+
+enum Availability {
+  AVAILABLE
+  BUSY
+  LOOKING_FOR_TEAM
+  NOT_AVAILABLE
+}
+
+enum SkillCategory {
+  FRONTEND
+  BACKEND
+  MOBILE
+  DATABASE
+  DEVOPS
+  CLOUD
+  AI
+  TESTING
+  DESIGN
+  OTHER
+}
+
 model User {
   id String @id @default(cuid())
 
@@ -45,22 +72,11 @@ model User {
   following Follow[] @relation("UserFollowing")
   followers Follow[] @relation("UserFollowers")
 
+  // Skills
+  skills UserSkill[]
+
   @@index([status])
   @@index([createdAt])
-}
-
-enum ExperienceLevel {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
-  PROFESSIONAL
-}
-
-enum Availability {
-  AVAILABLE
-  BUSY
-  LOOKING_FOR_TEAM
-  NOT_AVAILABLE
 }
 
 model Profile {
@@ -72,18 +88,16 @@ model Profile {
 
   avatarUrl String?
   bannerUrl String?
-  bio       String?
+  bio       String? @db.VarChar(300)
 
   location String?
 
   website      String?
   portfolioUrl String?
 
-  githubUsername String?
-  linkedinUrl    String?
-  twitterUrl     String?
-
-  skills Json?
+  githubUrl   String?
+  linkedinUrl String?
+  twitterUrl  String?
 
   experienceLevel ExperienceLevel @default(BEGINNER)
   availability    Availability    @default(AVAILABLE)
@@ -94,7 +108,35 @@ model Profile {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([displayName])
-  @@index([githubUsername])
+}
+
+model Skill {
+  id String @id @default(cuid())
+
+  name String @unique
+  slug String @unique
+
+  category SkillCategory
+
+  icon String?
+
+  createdAt DateTime @default(now())
+
+  users UserSkill[]
+}
+
+model UserSkill {
+  userId  String
+  skillId String
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, skillId])
+  @@index([userId])
+  @@index([skillId])
 }
 
 model Follow {

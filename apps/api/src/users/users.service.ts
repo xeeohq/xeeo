@@ -86,7 +86,16 @@ export class UsersService {
     const hasUpdates =
       updateProfileDto.displayName !== undefined ||
       updateProfileDto.bio !== undefined ||
-      updateProfileDto.avatarUrl !== undefined;
+      updateProfileDto.avatarUrl !== undefined ||
+      updateProfileDto.bannerUrl !== undefined ||
+      updateProfileDto.location !== undefined ||
+      updateProfileDto.website !== undefined ||
+      updateProfileDto.portfolioUrl !== undefined ||
+      updateProfileDto.githubUrl !== undefined ||
+      updateProfileDto.linkedinUrl !== undefined ||
+      updateProfileDto.twitterUrl !== undefined ||
+      updateProfileDto.experienceLevel !== undefined ||
+      updateProfileDto.availability !== undefined;
 
     if (!hasUpdates) {
       throw new BadRequestException('At least one field must be provided.');
@@ -94,7 +103,20 @@ export class UsersService {
 
     await this.findByIdOrThrow(userId);
 
-    const { displayName, bio, avatarUrl } = updateProfileDto;
+    const {
+      displayName,
+      bio,
+      avatarUrl,
+      bannerUrl,
+      location,
+      website,
+      portfolioUrl,
+      githubUrl,
+      linkedinUrl,
+      twitterUrl,
+      experienceLevel,
+      availability,
+    } = updateProfileDto;
 
     await this.prisma.profile.update({
       where: {
@@ -104,6 +126,15 @@ export class UsersService {
         displayName,
         bio,
         avatarUrl,
+        bannerUrl,
+        location,
+        website,
+        portfolioUrl,
+        githubUrl,
+        linkedinUrl,
+        twitterUrl,
+        experienceLevel,
+        availability,
       },
     });
 

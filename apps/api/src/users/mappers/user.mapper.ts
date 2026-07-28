@@ -1,4 +1,8 @@
-import { User } from '@prisma/client';
+import {
+  User,
+  ExperienceLevel,
+  Availability,
+} from '@prisma/client';
 
 import {
   UserProfileResponseDto,
@@ -12,6 +16,15 @@ export class UserMapper {
         displayName: string;
         bio: string | null;
         avatarUrl: string | null;
+        bannerUrl: string | null;
+        location: string | null;
+        website: string | null;
+        portfolioUrl: string | null;
+        githubUrl: string | null;
+        linkedinUrl: string | null;
+        twitterUrl: string | null;
+        experienceLevel: ExperienceLevel | null;
+        availability: Availability | null;
       } | null;
     },
   ): UserResponseDto {
@@ -20,6 +33,17 @@ export class UserMapper {
     profile.displayName = user.profile?.displayName ?? '';
     profile.bio = user.profile?.bio ?? null;
     profile.avatarUrl = user.profile?.avatarUrl ?? null;
+    profile.bannerUrl = user.profile?.bannerUrl ?? null;
+    profile.location = user.profile?.location ?? null;
+    profile.website = user.profile?.website ?? null;
+    profile.portfolioUrl = user.profile?.portfolioUrl ?? null;
+    profile.githubUrl = user.profile?.githubUrl ?? null;
+    profile.linkedinUrl = user.profile?.linkedinUrl ?? null;
+    profile.twitterUrl = user.profile?.twitterUrl ?? null;
+    profile.experienceLevel =
+  user.profile?.experienceLevel ?? ExperienceLevel.BEGINNER;
+    profile.availability =
+  user.profile?.availability ?? Availability.AVAILABLE;
 
     const response = new UserResponseDto();
 
