@@ -189,4 +189,22 @@ export class FollowService {
       isSelf: false,
     };
   }
+
+async countFollowers(userId: string): Promise<number> {
+  return this.prisma.follow.count({
+    where: {
+      followingId: userId,
+    },
+  });
+}
+
+async countFollowing(userId: string): Promise<number> {
+  return this.prisma.follow.count({
+    where: {
+      followerId: userId,
+    },
+  });
+}
+
+
 }

@@ -9,6 +9,7 @@ import { AdminModule } from './admin/admin.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { FollowModule } from './follow/follow.module';
+import { DeveloperModule } from './developer/developer.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { FollowModule } from './follow/follow.module';
     UsersModule,
     AdminModule,
     FollowModule,
+    DeveloperModule,
   ],
   controllers: [],
   providers: [
