@@ -1,300 +1,251 @@
-# Authentication Feature
+# Authentication Module
 
-## Version
+## Status
 
-v1.0
+✅ Completed
 
-**Last Updated:** July 2026
+**Sprint**
 
----
-
-# Purpose
-
-This document describes the implementation of the Authentication feature in the XEEO backend.
-
-Unlike the system architecture documentation, this document focuses on the current implementation, project structure, business rules, and development status.
+Core Sprint 1 — Identity & Social Foundation
 
 ---
 
 # Overview
 
-The Authentication feature is responsible for:
+The Authentication module is responsible for user identity and secure access to the XEEO platform.
 
-- User registration
-- User login
-- User logout
-- JWT authentication
-- Role-based authorization
-- Route protection
+It provides:
 
-It provides the security foundation for every protected backend feature.
+- User Registration
+- User Login
+- JWT Authentication
+- Password Hashing
+- Route Protection
+- Password Change
 
----
-
-# Current Status
-
-✅ Complete
-
-Implemented during **Sprint 1 – Backend Foundation**.
+Authentication is implemented using **JWT (JSON Web Tokens)** and **Argon2** for password hashing.
 
 ---
 
-# Responsibilities
+# Features
 
-The Authentication module is responsible for:
+## Registration
 
-- Registering new users
-- Authenticating existing users
-- Verifying passwords
-- Hashing passwords
-- Generating JWT access tokens
-- Protecting API routes
-- Authorizing users based on roles
-- Providing authenticated user information to controllers
+**Endpoint**
+
+```http
+POST /auth/register
+```
+
+### Responsibilities
+
+- Create a new user account
+- Validate request data
+- Ensure username is unique
+- Ensure email is unique
+- Hash password using Argon2
+- Create default profile
+- Return authenticated user
 
 ---
 
-# Folder Structure
+## Login
 
-```text
-auth/
+**Endpoint**
 
-├── controllers/
-├── dto/
-├── guards/
-├── strategies/
-├── decorators/
-├── interfaces/
-├── auth.service.ts
-├── auth.controller.ts
-└── auth.module.ts
+```http
+POST /auth/login
+```
+
+### Responsibilities
+
+- Authenticate using email
+- Verify password
+- Generate JWT access token
+- Return authenticated user
+
+---
+
+## Current User Authentication
+
+Protected routes require a valid JWT.
+
+Example:
+
+```http
+Authorization: Bearer <access_token>
 ```
 
 ---
 
-# Implemented APIs
+## Change Password
 
-| Method | Endpoint | Status |
-|---------|----------|--------|
-| POST | /auth/register | ✅ |
-| POST | /auth/login | ✅ |
-| POST | /auth/logout | ✅ |
+**Endpoint**
 
----
-
-# DTOs
-
-Current DTOs include:
-
-- RegisterDto
-- LoginDto
-
-Responsibilities:
-
-- Request validation
-- Input constraints
-- Type safety
-
-Validation is performed using:
-
-- class-validator
-- class-transformer
-
----
-
-# Controllers
-
-The controller is responsible for:
-
-- Receiving HTTP requests
-- Validating request bodies
-- Calling the service layer
-- Returning API responses
-
-Controllers should remain thin and contain no business logic.
-
----
-
-# Services
-
-The service layer contains the authentication business logic.
-
-Responsibilities include:
-
-- User registration
-- Password hashing
-- Password verification
-- JWT generation
-- Duplicate user validation
-- Authentication flow
-
-Business rules should always remain inside services.
-
----
-
-# Guards
-
-Current guards:
-
-- JwtAuthGuard
-- RolesGuard
-
-Responsibilities:
-
-- Authenticate requests
-- Protect private endpoints
-- Verify user roles
-
----
-
-# Decorators
-
-Current decorators:
-
-- CurrentUser
-- Roles
-
-These decorators simplify controller implementations and reduce duplicate logic.
-
----
-
-# Authentication Flow
-
-```text
-Register
-
-↓
-
-Validate Request
-
-↓
-
-Hash Password
-
-↓
-
-Create User
-
-↓
-
-Create Profile
-
-↓
-
-Return Success
+```http
+PATCH /auth/change-password
 ```
 
----
+### Requirements
 
-```text
-Login
+User must already be authenticated.
 
-↓
+### Validation
 
-Validate Credentials
+- Current password is required.
+- New password must satisfy validation rules.
 
-↓
+### Business Rules
 
-Verify Password
-
-↓
-
-Generate JWT
-
-↓
-
-Return Access Token
-```
+- Verify current password.
+- Reject incorrect current password.
+- Hash the new password using Argon2.
+- Replace the stored password hash.
+- Old password immediately becomes invalid.
 
 ---
 
 # Security
 
-Current security measures:
+## Password Hashing
 
-- Argon2 password hashing
-- JWT authentication
-- Role-based authorization
-- Route protection
-- DTO validation
-- Password verification
+Passwords are never stored in plain text.
 
----
+Algorithm:
 
-# Business Rules
-
-The Authentication module follows these rules:
-
-- Every email must be unique.
-- Every username must be unique.
-- Passwords are never stored in plain text.
-- Passwords are hashed using Argon2.
-- Protected routes require a valid JWT.
-- Authorization is handled through roles.
+- Argon2
 
 ---
 
-# Testing
+## JWT
 
-Completed:
+Authentication uses JWT access tokens.
 
-- Registration
-- Login
-- Logout
+Protected endpoints require:
+
+```http
+Authorization: Bearer <token>
+```
+
+---
+
+## Guards
+
+The application uses:
+
+- JwtAuthGuard
+
+Public endpoints explicitly use:
+
+- Public Decorator
+
+Authenticated user information is injected using:
+
+- CurrentUser Decorator
+
+---
+
+# Validation
+
+## Registration
+
+- Valid email
+- Username length validation
+- Password minimum length
+- Required fields
+
+---
+
+## Login
+
+- Valid email
+- Password required
+
+---
+
+## Password Change
+
+- Current password required
+- New password minimum length
+- Incorrect current password returns an error
+
+---
+
+# Error Handling
+
+Examples include:
+
+- Email already registered
+- Username already taken
 - Invalid credentials
-- Duplicate email
-- Duplicate username
-- Protected routes
-- Role authorization
-
-Status:
-
-✅ Tested
+- Unauthorized request
+- Current password is incorrect
+- Validation errors
 
 ---
 
-# Future Improvements
+# Module Structure
 
-Planned for Version 1.0:
-
-- Refresh Tokens
-- Email Verification
-- Forgot Password
-- Password Reset
-- Google OAuth
-- GitHub OAuth
-
-Future Versions:
-
-- Two-Factor Authentication
-- Passkeys
-- Enterprise SSO
-- Trusted Devices
-- Login History
+```text
+auth/
+├── auth.controller.ts
+├── auth.service.ts
+├── auth.module.ts
+├── auth.mapper.ts
+│
+├── dto/
+│   ├── register.dto.ts
+│   ├── login.dto.ts
+│   └── change-password.dto.ts
+│
+├── decorators/
+│   ├── current-user.decorator.ts
+│   └── public.decorator.ts
+│
+├── guards/
+│   └── jwt-auth.guard.ts
+│
+├── strategies/
+│   └── jwt.strategy.ts
+```
 
 ---
 
 # Dependencies
 
-This module depends on:
-
 - Prisma
-- JWT
-- Argon2
 - Users Module
+- JWT
+- Passport
+- Argon2
+- Config Module
 
 ---
 
-# Related Documentation
+# Current Status
 
-- docs/system/02-Authentication.md
-- docs/system/03-API-Design.md
-- docs/backend/features/Users.md
+| Feature | Status |
+|---------|--------|
+| Registration | ✅ |
+| Login | ✅ |
+| JWT Authentication | ✅ |
+| Password Hashing | ✅ |
+| Route Protection | ✅ |
+| CurrentUser Decorator | ✅ |
+| Public Decorator | ✅ |
+| Password Change | ✅ |
 
 ---
 
-# Change Log
+# Future Enhancements
 
-| Version | Changes |
-|---------|---------|
-| v1.0 | Initial implementation completed during Sprint 1. |
+Planned for later sprints:
+
+- Refresh Tokens
+- Email Verification
+- Password Reset via Email
+- Two-Factor Authentication (2FA)
+- Session Management
+- OAuth (GitHub, Google)
+- Login History
+- Device Management

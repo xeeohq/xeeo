@@ -1,773 +1,261 @@
-# XEEO Authentication Architecture
+# Authentication Architecture
 
-## Version
+## Status
 
-v1.0
-
----
-
-# Purpose
-
-This document defines the complete authentication and authorization architecture for XEEO.
-
-It describes how users register, authenticate, maintain sessions, reset passwords, verify emails, use OAuth providers, and securely access protected resources.
-
-This document serves as the blueprint for implementing the Authentication module in NestJS.
+✅ Implemented
 
 ---
 
-# Goals
+# Overview
 
-The authentication system must be:
+XEEO uses **JWT (JSON Web Tokens)** for stateless authentication.
 
-* Secure
-* Fast
-* Scalable
-* Stateless
-* OAuth-ready
-* Mobile-ready
-* WebSocket compatible
+Passwords are securely hashed using **Argon2** before being stored in the database.
 
----
-
-# Authentication Methods
-
-Supported methods:
-
-* Email + Password
-* Google OAuth
-* GitHub OAuth
-
-Future:
-
-* Passkeys (WebAuthn)
-* Two-Factor Authentication (2FA)
-* Enterprise SSO
+Authentication is centralized within the Authentication module and integrated with the Users module.
 
 ---
 
 # Authentication Flow
 
-```text id="rkpn4h"
-Register
-
-↓
-
-Verify Email
-
-↓
-
-Login
-
-↓
-
-Access Token
-
-↓
-
-Refresh Token
-
-↓
-
-Protected Resources
+```text
+Client
+    │
+    │ Register / Login
+    ▼
+Authentication Controller
+    │
+    ▼
+Authentication Service
+    │
+    ├── Validate Request
+    ├── Check Existing User
+    ├── Hash / Verify Password
+    └── Generate JWT
+    │
+    ▼
+Database
+    │
+    ▼
+JWT Access Token
+    │
+    ▼
+Client Stores Token
 ```
 
 ---
 
-# Registration Flow
+# Request Lifecycle
 
-```text id="8m6j7a"
-User
+For protected endpoints:
 
-↓
-
-Register Form
-
-↓
-
-Validation
-
-↓
-
-Hash Password
-
-↓
-
-Create User
-
-↓
-
-Create Profile
-
-↓
-
-Send Verification Email
-
-↓
-
-Registration Complete
+```text
+Client
+    │
+    │ Authorization: Bearer <token>
+    ▼
+JwtAuthGuard
+    │
+    ▼
+JWT Strategy
+    │
+    ▼
+Validate Token
+    │
+    ▼
+Load User
+    │
+    ▼
+CurrentUser Decorator
+    │
+    ▼
+Controller
+    │
+    ▼
+Service
 ```
 
 ---
 
-# Email Verification Flow
+# Components
 
-```text id="o5uzgc"
-User clicks verification link
+## Authentication Controller
 
-↓
+Responsibilities:
 
-Verify token
+- Register
+- Login
+- Change Password
 
-↓
-
-Mark emailVerified = true
-
-↓
-
-Allow login
-```
-
-Only verified accounts may access protected features.
+Controllers remain thin and delegate business logic to services.
 
 ---
 
-# Login Flow
+## Authentication Service
 
-```text id="m7tfnt"
-Email
+Responsible for:
 
-+
-
-Password
-
-↓
-
-Validation
-
-↓
-
-Verify Password
-
-↓
-
-Generate JWT
-
-↓
-
-Generate Refresh Token
-
-↓
-
-Return Tokens
-```
+- User registration
+- Login
+- Password hashing
+- Password verification
+- JWT generation
+- Password changes
 
 ---
 
-# Token Strategy
+## JWT Strategy
 
-## Access Token
+Responsibilities:
 
-Purpose:
-
-Access protected APIs.
-
-Lifetime:
-
-15 minutes
-
-Storage:
-
-Memory (preferred) or secure cookie.
+- Validate JWT access tokens
+- Extract authenticated user information
+- Reject invalid or expired tokens
 
 ---
 
-## Refresh Token
+## JwtAuthGuard
 
-Purpose:
+Protects authenticated endpoints.
 
-Generate new access tokens.
-
-Lifetime:
-
-30 days
-
-Storage:
-
-HttpOnly Secure Cookie.
-
-Refresh tokens should never be accessible through JavaScript.
+Requests without a valid JWT are rejected.
 
 ---
 
-# JWT Payload
+## CurrentUser Decorator
+
+Injects the authenticated user into controller methods.
 
 Example:
 
-```json id="e5m6nh"
-{
-  "sub": "clz6zslx90000k0k5m2axr0q8",
-  "username": "suraj",
-  "role": "USER"
-}
+```ts
+@CurrentUser() user
 ```
 
-Do not include sensitive information such as email or password hashes.
+This avoids manually extracting the user from the request object.
 
 ---
 
-# Password Policy
+## Public Decorator
 
-Minimum:
-
-* 8 characters
-
-Must contain:
-
-* Uppercase letter
-* Lowercase letter
-* Number
-* Special character
-
-Passwords are hashed using:
-
-Argon2id
-
----
-
-# Password Reset Flow
-
-```text id="2t7r5d"
-Forgot Password
-
-↓
-
-Enter Email
-
-↓
-
-Generate Reset Token
-
-↓
-
-Email Link
-
-↓
-
-Choose New Password
-
-↓
-
-Hash Password
-
-↓
-
-Password Updated
-```
-
-Reset tokens:
-
-* Single use
-* Expire after 30 minutes
-
----
-
-# Logout Flow
-
-```text id="q2r49b"
-User clicks logout
-
-↓
-
-Invalidate Refresh Token
-
-↓
-
-Delete Cookies
-
-↓
-
-Logout Complete
-```
-
-Access tokens naturally expire after their lifetime.
-
----
-
-# OAuth
-
-## Google
-
-Flow:
-
-```text id="53p2o1"
-Google Login
-
-↓
-
-Google Consent
-
-↓
-
-Receive Profile
-
-↓
-
-Create User (if needed)
-
-↓
-
-Generate Tokens
-```
-
----
-
-## GitHub
-
-Flow:
-
-```text id="hfhh8h"
-GitHub Login
-
-↓
-
-GitHub OAuth
-
-↓
-
-Receive Profile
-
-↓
-
-Create User (if needed)
-
-↓
-
-Generate Tokens
-```
-
----
-
-# Session Management
-
-Sessions are stateless.
-
-The backend does not maintain server-side user sessions.
-
-Authentication is based on:
-
-* JWT Access Token
-* Refresh Token
-
----
-
-# Authorization
-
-Authentication answers:
-
-> Who are you?
-
-Authorization answers:
-
-> What are you allowed to do?
-
-Authorization uses RBAC.
-
-Platform Roles:
-
-* USER
-* MODERATOR
-* ADMIN
-* SUPER_ADMIN
-
-Workspace Roles:
-
-* OWNER
-* ADMIN
-* MODERATOR
-* MEMBER
-* GUEST
-
-Project Roles:
-
-* OWNER
-* MAINTAINER
-* DEVELOPER
-* TESTER
-* DESIGNER
-* VIEWER
-
----
-
-# Protected Routes
+Marks endpoints that do not require authentication.
 
 Examples:
 
-Public:
-
-```text id="x03l0l"
-/login
-
-/register
-
-/community
-
-/projects/public
-```
-
-Protected:
-
-```text id="9gz5g6"
-/dashboard
-
-/workspaces
-
-/projects
-
-/profile
-
-/settings
-```
-
-Every protected request requires a valid Access Token.
+- Register
+- Login
+- Public Developer Profile
 
 ---
 
-# WebSocket Authentication
+# Password Security
 
-```text id="jxtc1i"
-User
+Passwords are never stored in plain text.
 
-↓
+Algorithm:
 
-Login
+- Argon2
 
-↓
+Workflow:
 
-JWT
-
-↓
-
-Open WebSocket
-
-↓
-
-Verify Token
-
-↓
-
-Join Workspace Rooms
+```text
+Password
+    │
+    ▼
+Argon2 Hash
+    │
+    ▼
+Database
 ```
 
-Only authenticated users may establish WebSocket connections.
+During login:
 
----
-
-# Security Measures
-
-* HTTPS only
-* Argon2id password hashing
-* JWT expiration
-* Refresh token rotation
-* HttpOnly cookies
-* Secure cookies in production
-* Rate limiting
-* Brute-force protection
-* Email verification
-* Input validation
-* CSRF protection where applicable
-* Helmet security headers
-
----
-
-# Authentication Module Structure
-
-```text id="jlwmu2"
-auth/
-
-├── controllers/
-├── services/
-├── guards/
-├── strategies/
-├── decorators/
-├── dto/
-├── interfaces/
-└── auth.module.ts
+```text
+Password
+    │
+    ▼
+Argon2 Verify
+    │
+    ▼
+Authenticated
 ```
 
 ---
 
-# API Endpoints
+# JWT
 
-```text id="9d7mzt"
-POST /auth/register
+The system uses JWT access tokens.
 
-POST /auth/login
+Protected requests include:
 
-POST /auth/logout
-
-POST /auth/refresh
-
-POST /auth/forgot-password
-
-POST /auth/reset-password
-
-GET /auth/verify-email
-
-GET /auth/google
-
-GET /auth/github
+```http
+Authorization: Bearer <access_token>
 ```
+
+The JWT identifies the authenticated user and is validated before the request reaches the controller.
 
 ---
 
-# Error Responses
+# Authentication Endpoints
 
-Example:
-
-```json id="v3mxfe"
-{
-  "success": false,
-  "message": "Invalid email or password.",
-  "error": {
-    "code": "INVALID_CREDENTIALS"
-  }
-}
-```
+| Method | Endpoint | Authentication |
+|---------|----------|----------------|
+| POST | /auth/register | Public |
+| POST | /auth/login | Public |
+| PATCH | /auth/change-password | Required |
 
 ---
 
-# Success Response
+# Protected User Endpoints
 
-```json id="1i7tv6"
-{
-  "success": true,
-  "data": {
-    "accessToken": "...",
-    "user": {}
-  }
-}
+| Method | Endpoint |
+|---------|----------|
+| GET | /users/me |
+| PATCH | /users/me |
+| PATCH | /users/me/profile |
+| POST | /users/:username/follow |
+| DELETE | /users/:username/follow |
+
+---
+
+# Security Principles
+
+- Passwords are hashed using Argon2.
+- JWT protects authenticated endpoints.
+- Controllers do not contain business logic.
+- Sensitive fields (password hashes) are never exposed in API responses.
+- Account information and profile information are separated into distinct domains.
+
+---
+
+# Module Relationships
+
+```text
+Authentication
+        │
+        ▼
+      Users
+        │
+        ▼
+     Profile
+        │
+        ▼
+ Social Graph
 ```
+
+Authentication provides identity and access control for the rest of the system.
 
 ---
 
 # Future Enhancements
 
-* Passkeys
-* Two-Factor Authentication
-* Enterprise SSO
-* Session management dashboard
-* Device management
-* Login history
-* Security alerts
-* Trusted devices
+Planned for later sprints:
 
----
-
-# Authentication Lifecycle
-
-```text id="4iqs3x"
-Register
-      │
-      ▼
-Verify Email
-      │
-      ▼
-Login
-      │
-      ▼
-Access Token
-      │
-      ▼
-Protected APIs
-      │
-      ▼
-Refresh Token
-      │
-      ▼
-Logout
-```
-
----
-
-# Design Decisions
-
-* JWT-based stateless authentication.
-* Refresh tokens stored in HttpOnly cookies.
-* Argon2id for password hashing.
-* OAuth support from the beginning.
-* Email verification required.
-* Role-based authorization for platform, workspace, and project access.
-* Authentication designed to work with both REST APIs and WebSockets.
-
----
-
-# Next Document
-
-```text id="4pxw9e"
-docs/system/03-API-Design.md
-```
-
-This document defines API conventions, versioning, endpoint structure, request/response formats, pagination, filtering, error handling, and REST principles that every XEEO service will follow.
-
----
-
-# Implementation Status
-
-This document defines the target authentication architecture for XEEO. The sections below track the implementation progress of the Authentication module.
-
-## Sprint 1 Implementation
-
-### Completed ✅
-
-#### User Registration
-
-- User registration endpoint
-- Input validation using `class-validator`
-- Password hashing with Argon2
-- User creation
-- Profile creation
-- Duplicate email validation
-- Duplicate username validation
-
-#### Authentication
-
-- JWT-based authentication
-- Login endpoint
-- Logout endpoint
-- JWT Strategy
-- JWT Guard
-- Protected routes
-
-#### Authorization
-
-- Role-Based Access Control (RBAC)
-- Roles decorator
-- Roles guard
-- CurrentUser decorator
-- Route-level authorization
-
-#### User Module
-
-- Get current authenticated user (`GET /users/me`)
-- Update current user's profile (`PATCH /users/me`)
-
-#### Profile Management
-
-Supported profile fields:
-
-- Display Name
-- Bio
-- Avatar URL
-
-Validation rules:
-
-- Display name: 2–50 characters
-- Bio: maximum 500 characters
-- Avatar URL must be a valid URL
-- Empty PATCH requests are rejected
-- Bio can be cleared using an empty string
-
-#### Quality
-
-- DTO validation
-- Service-layer validation
-- Route protection
-- API testing completed
-
-Status:
-
-✅ Completed
-
----
-
-## Planned Authentication Features
-
-The following features remain part of the Version 1.0 roadmap but have not yet been implemented.
-
-### Email Verification
-
-- Verification email
-- Verification token
-- Verify email endpoint
-
-Status:
-
-⬜ Planned
-
----
-
-### Refresh Tokens
-
-- Refresh endpoint
-- Refresh token rotation
-- HttpOnly cookies
-- Token revocation
-
-Status:
-
-⬜ Planned
-
----
-
-### Password Recovery
-
-- Forgot password
-- Reset password
-- Reset token expiration
-
-Status:
-
-⬜ Planned
-
----
-
-### OAuth
-
-- Google OAuth
-- GitHub OAuth
-
-Status:
-
-⬜ Planned
-
----
-
-### Future Enhancements
-
+- Refresh Tokens
+- Email Verification
+- Password Reset
+- OAuth (GitHub / Google)
 - Two-Factor Authentication (2FA)
-- Passkeys (WebAuthn)
-- Enterprise SSO
-- Trusted Devices
+- Session Management
+- Device Management
 - Login History
-
-Status:
-
-⬜ Future
-
----
-
-# Authentication Progress
-
-```text
-████████████████████░░░░░░░░░░░░░░░░░░░ 55%
-```
-
-| Feature | Status |
-|---------|--------|
-| Registration | ✅ |
-| Login | ✅ |
-| Logout | ✅ |
-| JWT Authentication | ✅ |
-| Route Protection | ✅ |
-| Authorization | ✅ |
-| Current User API | ✅ |
-| Profile Update API | ✅ |
-| Email Verification | ⬜ |
-| Refresh Tokens | ⬜ |
-| Password Reset | ⬜ |
-| Google OAuth | ⬜ |
-| GitHub OAuth | ⬜ |
-| 2FA | ⬜ |
-
----

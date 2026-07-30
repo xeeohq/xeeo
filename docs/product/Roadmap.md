@@ -2,7 +2,7 @@
 
 ## Version
 
-v3.0
+v4.0
 
 **Last Updated:** July 2026
 
@@ -18,71 +18,50 @@ Build XEEO into the ultimate collaborative platform for developers by combining:
 - Community feedback
 - AI-powered development assistance
 
-The development of XEEO follows a **documentation-first, architecture-driven** approach. Every feature is designed, reviewed, implemented, tested, documented, and committed before moving to the next sprint.
+XEEO follows a **documentation-first, architecture-driven** development process. Every feature is designed, implemented, tested, documented, committed, and reviewed before moving to the next sprint.
 
 ---
 
-# Overall Project Progress
+# Overall Progress
 
 ```text
-██████████████████░░░░░░░░░░░░░░░░░░░░░░ 45%
+████████████████████░░░░░░░░░░░░░░░░░░░░
+≈50%
 ```
 
-| Area | Status |
-|------|--------|
+| Stage | Status |
+|--------|--------|
 | Product Discovery | ✅ Complete |
-| Research | ✅ Complete |
 | UX Planning | ✅ Complete |
 | Database Design | ✅ Complete |
 | System Design | ✅ Complete |
 | Project Initialization | ✅ Complete |
-| Sprint 1 | ✅ Complete |
-| Sprint 2 | 🟡 In Progress |
-| Sprint 3 | ⬜ Pending |
-| Sprint 4 | ⬜ Pending |
-| Sprint 5 | ⬜ Pending |
-| Sprint 6 | ⬜ Pending |
-| Sprint 7 | ⬜ Pending |
-| Sprint 8 | ⬜ Pending |
-| Sprint 9 | ⬜ Pending |
-| Sprint 10 | ⬜ Pending |
+| Core Sprint 0 | ✅ Complete |
+| Core Sprint 1 | ✅ Complete |
+| Core Sprint 2 | ⏳ Next |
+| Core Sprint 3 | ⬜ Pending |
+| Core Sprint 4 | ⬜ Pending |
+| Core Sprint 5 | ⬜ Pending |
 
 ---
 
-# Current Sprint
+# Current Milestone
 
-## Sprint 2 — Social Graph
+## Core Sprint 2 — Projects
 
-### Status
+**Status**
 
-🟡 **In Progress**
+🟡 Ready to Start
 
-### Goal
+**Goal**
 
-Build the foundation of XEEO's social platform by allowing users to connect through a lightweight Follow system.
-
-### Planned Deliverables
-
-- Social Graph Design
-- Database Design
-- Prisma Models
-- Follow Service
-- Controllers
-- DTOs
-- Validation
-- Testing
-- Refactoring
-- Documentation Update
-
-### Current Phase
-
-**Phase 1 — Social Graph Design**
+Transform XEEO from a developer identity platform into a collaborative development platform by introducing Projects.
 
 ---
 
-# Development Workflow
+# Engineering Workflow
 
-Every sprint follows the same engineering lifecycle.
+Every sprint follows the same workflow.
 
 ```text
 Planning
@@ -97,10 +76,7 @@ Implementation
 Testing
       │
       ▼
-Refactoring
-      │
-      ▼
-Documentation Update
+Documentation
       │
       ▼
 Git Commit
@@ -109,96 +85,29 @@ Git Commit
 Push
       │
       ▼
-Sprint Closed
+Sprint Complete
 ```
 
-A sprint is considered **complete only after documentation and roadmap have been updated.**
+A sprint is considered complete only after:
+
+- Implementation
+- Testing
+- Documentation
+- Git history
+
+are all finished.
 
 ---
 
-# Phase 0 — Product Discovery ✅
+# Core Sprint 0 — Foundation ✅
 
-## Deliverables
+## Goal
 
-- Vision
-- Product Requirements
-- Product Principles
-- User Personas
-- Feature Specification
-- Competitor Analysis
-- Roadmap
+Build a scalable engineering foundation.
 
-### Status
+### Completed
 
-✅ Completed
-
----
-
-# Phase 1 — UX & Information Architecture ✅
-
-## Deliverables
-
-- User Flow
-- Sitemap
-- Information Architecture
-
-### Status
-
-✅ Completed
-
----
-
-# Phase 2 — Database Design ✅
-
-## Deliverables
-
-- Database Architecture
-- Entity Design
-- ER Diagram
-- User
-- Profile
-- Workspace
-- Channel
-- Project
-- WorkspaceMember
-- ProjectMember
-- Invitation
-- Message
-- CommunityPost
-- Comment
-- Review
-- Notification
-- AIConversation
-- AIMessage
-
-### Status
-
-✅ Completed
-
----
-
-# Phase 3 — System Design ✅
-
-## Deliverables
-
-- Technical Decisions
-- System Architecture
-- Authentication Architecture
-- API Design
-- WebSocket Architecture
-
-### Status
-
-✅ Completed
-
----
-
-# Phase 4 — Project Initialization ✅
-
-## Deliverables
-
-- Git Repository
-- GitHub Organization
+- Monorepo
 - Turborepo
 - pnpm Workspace
 - Next.js
@@ -206,362 +115,181 @@ A sprint is considered **complete only after documentation and roadmap have been
 - Docker
 - PostgreSQL
 - Prisma
-- ESLint
-- Prettier
-- GitHub Actions
-- Monorepo Foundation
+- Validation
+- Configuration
+- Documentation
+- GitHub Organization
+- Domain Setup
 
-### Status
+**Status**
 
 ✅ Completed
 
 ---
 
-# Sprint 1 — Backend Foundation ✅
+# Core Sprint 1 — Identity & Social Foundation ✅
 
 ## Goal
 
-Build the secure backend foundation required for all future modules.
+Build the complete developer identity layer.
 
-## Completed Modules
+---
 
-### Authentication
+## Phase 1 — Authentication
+
+Completed
 
 - User Registration
 - Login
-- Logout
 - JWT Authentication
 - Password Hashing
+- Guards
+- Public Decorator
+- CurrentUser Decorator
+- Change Password
 - Validation
 
-### Authorization
+---
 
-- Roles
-- Guards
-- CurrentUser Decorator
-- Route Protection
+## Phase 2 — Users
 
-### Users
+Completed
 
-- Get Current User
-- Update Profile
+- Current User
+- User Mapper
+- Profile Retrieval
+- DTOs
+- Response Models
 
-### Profiles
+---
+
+## Phase 3 — Social Graph
+
+Completed
+
+- Follow User
+- Unfollow User
+- Followers
+- Following
+- Relationship APIs
+
+---
+
+## Phase 4 — Profile & Account
+
+Completed
+
+Profile
 
 - Display Name
 - Bio
 - Avatar URL
+- Banner URL
+- Location
+- Website
+- Portfolio
+- GitHub
+- LinkedIn
+- Twitter
+- Experience Level
+- Availability
 
-### Quality
+Account
 
-- Validation
-- Refactoring
-- API Testing
+- Username Update
+- Email Update
+- Password Change
 
-### Status
+Developer
+
+- Public Developer Profile
+
+---
+
+**Sprint Status**
 
 ✅ Completed
 
 ---
 
-# Sprint 2 — Social Graph 🟡
+# Core Sprint 2 — Projects
 
-## Goal
+Status
 
-Transform XEEO into a developer social platform.
+🟡 Ready to Start
 
-## Planned Modules
+Planned modules
 
-- Follow Users
-- Unfollow Users
-- Followers
-- Following
-- Public User Profiles
-- Social Graph API
-- Relationship Validation
-- Testing
-- Refactoring
-
-### Status
-
-🟡 In Progress
-
----
-
-# Sprint 3 — Community
-
-## Planned Features
-
-- Community Posts
-- Comments
-- Likes
-- Bookmarks
-- Public Feed
-- Trending Feed
-
-### Status
-
-⬜ Planned
-
----
-
-# Sprint 4 — Workspaces
-
-## Planned Features
-
-- Workspace Management
-- Member Invitations
-- Workspace Roles
-- Workspace Settings
-
-### Status
-
-⬜ Planned
-
----
-
-# Sprint 5 — Channels
-
-## Planned Features
-
-- Channel Management
-- Messaging
-- Channel Permissions
-- Attachments
-
-### Status
-
-⬜ Planned
-
----
-
-# Sprint 6 — Projects
-
-## Planned Features
-
-- Project Management
-- Project Members
-- Project Status
+- Project Creation
 - Project Visibility
-- Project Dashboard
-
-### Status
-
-⬜ Planned
+- Tech Stack
+- Tags
+- Project Members
+- Project Discovery
+- Stars
+- Forks
 
 ---
 
-# Sprint 7 — Notifications
+# Core Sprint 3 — Workspaces
 
-## Planned Features
+Status
 
-- In-App Notifications
-- Mentions
+⬜ Pending
+
+Planned modules
+
+- Workspaces
+- Workspace Members
+- Roles
+- Permissions
+- Invitations
+
+---
+
+# Core Sprint 4 — Collaboration
+
+Status
+
+⬜ Pending
+
+Planned modules
+
+- Discussions
+- Comments
+- Notifications
 - Activity Feed
-- Notification Preferences
-
-### Status
-
-⬜ Planned
+- Mentions
 
 ---
 
-# Sprint 8 — AI Assistant
+# Core Sprint 5 — Production Readiness
 
-## Planned Features
+Status
 
-- AI Chat
-- Code Explanation
-- Documentation Generation
-- Project Assistant
-- AI Conversation History
+⬜ Pending
 
-### Status
+Planned modules
 
-⬜ Planned
-
----
-
-# Sprint 9 — Testing & Quality Assurance
-
-## Deliverables
-
-- Unit Tests
-- Integration Tests
-- End-to-End Tests
-- Security Testing
-- Performance Testing
-- Bug Fixes
-
-### Status
-
-⬜ Planned
-
----
-
-# Sprint 10 — Deployment & Release
-
-## Deliverables
-
-- Docker Images
-- Railway Deployment
-- CI/CD Pipeline
-- Production Environment
+- File Storage
+- Email
+- Rate Limiting
+- Logging
 - Monitoring
-- Version 1.0 Release
-
-### Status
-
-⬜ Planned
-
----
-
-# Future Versions
-
-## Version 1.1
-
-- File Attachments
-- Emoji Reactions
-- Markdown Improvements
-- Better Search
+- Testing
+- CI/CD
+- Deployment
+- Performance Optimization
 
 ---
 
-## Version 1.2
+# Deferred Features
 
-- GitHub Integration
-- GitLab Integration
-- Repository Sync
-- Issue Import
+The following features were intentionally postponed because they are product enhancements rather than Sprint 1 foundations.
 
----
+- Profile Completeness
+- Username Availability API
+- Profile Suggestions
+- Developer Profile Preview
 
-## Version 1.5
-
-- AI Code Review
-- AI Pull Request Review
-- AI Architecture Suggestions
-- AI Project Insights
-
----
-
-## Version 2.0
-
-- Organizations
-- Enterprise Features
-- Team Billing
-- Plugin System
-- Mobile Applications
-- Desktop Application
-
----
-
-# Milestones
-
-| Milestone | Status |
-|-----------|--------|
-| Product Planned | ✅ |
-| Database Designed | ✅ |
-| Architecture Completed | ✅ |
-| Project Initialized | ✅ |
-| Sprint 1 Completed | ✅ |
-| Sprint 2 Started | 🟡 |
-| Backend MVP | ⬜ |
-| Frontend MVP | ⬜ |
-| AI MVP | ⬜ |
-| Beta Launch | ⬜ |
-| Version 1.0 | ⬜ |
-
----
-
-# Sprint Progress Log
-
-| Sprint | Status | Notes |
-|---------|--------|-------|
-| Sprint 1 | ✅ Completed | Backend foundation completed successfully. |
-| Sprint 2 | 🟡 In Progress | Social Graph development started. |
-| Sprint 3 | ⬜ Planned | — |
-| Sprint 4 | ⬜ Planned | — |
-| Sprint 5 | ⬜ Planned | — |
-| Sprint 6 | ⬜ Planned | — |
-| Sprint 7 | ⬜ Planned | — |
-| Sprint 8 | ⬜ Planned | — |
-| Sprint 9 | ⬜ Planned | — |
-| Sprint 10 | ⬜ Planned | — |
-
----
-
-# Roadmap Maintenance Policy
-
-This roadmap is a **living project document**.
-
-After every completed sprint, the following sections must be updated:
-
-- Overall Progress
-- Current Sprint
-- Sprint Progress Log
-- Milestones
-- Development Percentage
-
-The architecture and long-term product vision should only be updated when there is a deliberate design change.
-
----
-
-# Immediate Next Steps
-
-1. Complete Sprint 2 – Social Graph
-2. Begin Community Module (Sprint 3)
-3. Build Workspaces
-4. Build Channels
-5. Build Projects
-6. Build Notifications
-7. Build AI Assistant
-8. Prepare Version 1.0 Release
-
----
-
-# Development Philosophy
-
-XEEO follows a documentation-first, architecture-driven development process.
-
-```text
-Plan
-
-↓
-
-Design
-
-↓
-
-Review
-
-↓
-
-Build
-
-↓
-
-Test
-
-↓
-
-Refactor
-
-↓
-
-Document
-
-↓
-
-Commit
-
-↓
-
-Deploy
-
-↓
-
-Iterate
-```
-
-Every sprint must be completed using this workflow before moving to the next one.
+These will be scheduled in a future sprint after the core platform modules are complete.

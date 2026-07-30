@@ -1,254 +1,307 @@
-# Users Feature
+# Users Module
 
-## Version
+## Status
 
-v1.0
+✅ Completed
 
-**Last Updated:** July 2026
+**Sprint**
 
----
-
-# Purpose
-
-This document describes the implementation of the Users feature in the XEEO backend.
-
-The Users module is responsible for managing user profiles, retrieving user information, and maintaining profile-related operations.
-
-This document focuses on the current implementation rather than future design.
+Core Sprint 1 — Identity & Social Foundation
 
 ---
 
 # Overview
 
-The Users feature manages user information after authentication.
+The Users module is responsible for developer identity, profile management, account management, and social relationships.
 
-It provides APIs and business logic for retrieving and updating user profile data while ensuring that only authorized users can modify their own information.
+It manages:
 
----
+- Current User
+- Public Developer Profiles
+- Profile Management
+- Account Settings
+- Social Graph
 
-# Current Status
-
-✅ Complete
-
-Implemented during **Sprint 1 – Backend Foundation**.
-
----
-
-# Responsibilities
-
-The Users module is responsible for:
-
-- Retrieving the authenticated user's profile
-- Retrieving user information
-- Updating profile details
-- Managing usernames
-- Managing display names
-- Managing biography
-- Managing avatar URLs
+This module acts as the central domain for developer information.
 
 ---
 
-# Folder Structure
+# Features
 
-```text
-users/
+## Current User
 
-├── controllers/
-├── dto/
-├── entities/
-├── interfaces/
-├── services/
-├── users.controller.ts
-├── users.service.ts
-└── users.module.ts
+### Endpoint
+
+```http
+GET /users/me
 ```
 
----
+### Responsibilities
 
-# Implemented APIs
-
-| Method | Endpoint | Status |
-|---------|----------|--------|
-| GET | /users/me | ✅ |
-| GET | /users/:id | ✅ |
-| PATCH | /users/me | ✅ |
+- Return authenticated user
+- Include profile information
+- Include social information where applicable
 
 ---
 
-# DTOs
+## Profile Management
 
-Current DTOs include:
+### Endpoint
 
-- UpdateProfileDto
+```http
+PATCH /users/me/profile
+```
 
-Responsibilities:
+### Editable Fields
 
-- Validate profile updates
-- Ensure correct data types
-- Enforce input constraints
+- displayName
+- bio
+- avatarUrl
+- bannerUrl
+- location
+- website
+- portfolioUrl
+- githubUrl
+- linkedinUrl
+- twitterUrl
+- experienceLevel
+- availability
 
-Validation is handled using:
+### Business Rules
 
-- class-validator
-- class-transformer
-
----
-
-# Controllers
-
-The Users controller is responsible for:
-
-- Receiving HTTP requests
-- Validating incoming data
-- Calling the service layer
-- Returning API responses
-
-Controllers should not contain business logic.
-
----
-
-# Services
-
-The Users service contains all profile-related business logic.
-
-Responsibilities include:
-
-- Fetching user profiles
-- Updating profile information
-- Username validation
-- Duplicate username checks
-- Profile persistence
-
-All database operations are handled through Prisma.
+- At least one field must be provided.
+- Only supplied fields are updated.
+- Avatar and Banner are managed as profile attributes.
+- URL fields are validated before saving.
 
 ---
 
-# Database Operations
+## Account Settings
 
-The Users module performs operations such as:
+### Endpoint
 
-- Find user by ID
-- Find current authenticated user
-- Update profile information
-- Check username availability
+```http
+PATCH /users/me
+```
 
-All queries are executed through Prisma.
+### Editable Fields
+
+- username
+- email
+
+### Business Rules
+
+- Username must be unique.
+- Email must be unique.
+- Empty update requests are rejected.
+- Account information is managed separately from profile information.
 
 ---
 
-# Business Rules
+## Public Developer Profile
 
-The Users module follows these rules:
+### Endpoint
 
-- Only authenticated users may access profile APIs.
-- Users may edit only their own profile.
-- Usernames must remain unique.
-- Invalid profile updates are rejected.
-- Required fields must always be validated.
+```http
+GET /developers/:username
+```
+
+### Returns
+
+- Public user information
+- Public profile
+- Skills
+- Followers count
+- Following count
+
+No private account information is exposed.
+
+---
+
+# Social Graph
+
+## Follow User
+
+```http
+POST /users/:username/follow
+```
+
+Creates a follow relationship.
+
+---
+
+## Unfollow User
+
+```http
+DELETE /users/:username/follow
+```
+
+Removes a follow relationship.
+
+---
+
+## Followers
+
+```http
+GET /users/:username/followers
+```
+
+Returns users following the developer.
+
+---
+
+## Following
+
+```http
+GET /users/:username/following
+```
+
+Returns users the developer follows.
+
+---
+
+# Profile Model
+
+The profile currently supports:
+
+- Display Name
+- Bio
+- Avatar URL
+- Banner URL
+- Location
+- Website
+- Portfolio URL
+- GitHub URL
+- LinkedIn URL
+- Twitter URL
+- Experience Level
+- Availability
+
+These fields represent the developer's public profile.
+
+---
+
+# Account Model
+
+Account information consists of:
+
+- Username
+- Email
+
+Password management is handled by the Authentication module.
 
 ---
 
 # Validation
 
-Current validation includes:
+The module validates:
 
-- Username format
 - Username uniqueness
-- Maximum field lengths
-- Required fields
-- Optional field validation
+- Email uniqueness
+- URL formats
+- String lengths
+- Enum values
+- Required update fields
 
 Invalid requests return appropriate validation errors.
 
 ---
 
-# Security
+# Module Structure
 
-Security measures include:
-
-- JWT authentication
-- Route protection
-- Ownership validation
-- Input validation
-- Role-based authorization where applicable
-
----
-
-# Response Model
-
-Profile responses may include:
-
-- User ID
-- Username
-- Display Name
-- Bio
-- Avatar URL
-- Created Date
-- Updated Date
-
-Sensitive information such as passwords is never returned.
-
----
-
-# Testing
-
-Completed:
-
-- Retrieve own profile
-- Retrieve user by ID
-- Update profile
-- Username validation
-- Duplicate username handling
-- Unauthorized access
-- Invalid request validation
-
-Status:
-
-✅ Tested
-
----
-
-# Future Improvements
-
-Planned for Version 1.0:
-
-- Profile banner
-- Profile visibility settings
-- User preferences
-- Social links
-- Location
-- Website
-
-Future Versions:
-
-- Verified profiles
-- User badges
-- Activity statistics
-- Achievement system
-- Custom profile themes
+```text
+users/
+├── users.controller.ts
+├── users.service.ts
+├── users.module.ts
+├── user.mapper.ts
+│
+├── dto/
+│   ├── update-account.dto.ts
+│   ├── update-profile.dto.ts
+│   └── responses/
+│
+├── constants/
+│   └── user.include.ts
+```
 
 ---
 
 # Dependencies
 
-This module depends on:
-
-- Authentication Module
 - Prisma
-- JWT Guards
+- Authentication Module
 
 ---
 
-# Related Documentation
+# Current Status
 
-- docs/backend/features/Authentication.md
-- docs/system/03-API-Design.md
-- docs/database/ERD.md
+| Feature | Status |
+|---------|--------|
+| Current User | ✅ |
+| Profile Retrieval | ✅ |
+| Profile Update | ✅ |
+| Account Update | ✅ |
+| Public Developer Profile | ✅ |
+| Follow User | ✅ |
+| Unfollow User | ✅ |
+| Followers | ✅ |
+| Following | ✅ |
 
 ---
 
-# Change Log
+# Architectural Decisions
 
-| Version | Changes |
-|---------|---------|
-| v1.0 | Initial implementation completed during Sprint 1. |
+## Account vs Profile
+
+Account information and profile information are intentionally separated.
+
+**Account**
+
+- username
+- email
+
+**Profile**
+
+- displayName
+- bio
+- avatarUrl
+- bannerUrl
+- location
+- website
+- portfolio
+- social links
+- experience
+- availability
+
+This separation keeps authentication concerns independent from profile management.
+
+---
+
+## Avatar & Banner
+
+Avatar and Banner are stored as profile attributes.
+
+The API updates them using:
+
+```http
+PATCH /users/me/profile
+```
+
+Dedicated upload or media endpoints are intentionally deferred to later sprints when cloud storage is introduced.
+
+---
+
+# Future Enhancements
+
+Planned for future sprints:
+
+- Profile Completeness
+- Username Availability
+- Profile Suggestions
+- Profile Preview Cards
+- Search Integration
+- Profile Verification
+- Badges
+- Achievements
+- Media Upload Integration

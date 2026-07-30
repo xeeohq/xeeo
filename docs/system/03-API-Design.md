@@ -1,330 +1,184 @@
-# XEEO API Design
+# API Design
 
-## Version
+## Status
 
-v1.0
-
----
-
-# Purpose
-
-This document defines the REST API architecture for XEEO.
-
-It establishes standards for endpoint naming, request/response formats, authentication, versioning, pagination, filtering, sorting, validation, and error handling.
-
-Every API endpoint in XEEO must follow these guidelines.
+✅ Updated after Core Sprint 1
 
 ---
 
----
+# API Principles
 
-# Implementation Status
+The XEEO API follows RESTful design principles.
 
-This document defines the API standards and conventions for XEEO.
+## Guidelines
 
-The following section tracks the implementation progress of the REST API while ensuring future endpoints continue following the standards defined in this document.
-
----
-
-# API Implementation Progress
-
-## Sprint 1 — Backend Foundation
-
-### Authentication APIs
-
-| Endpoint | Method | Status |
-|----------|--------|--------|
-| `/auth/register` | POST | ✅ Implemented |
-| `/auth/login` | POST | ✅ Implemented |
-| `/auth/logout` | POST | ✅ Implemented |
-| `/auth/refresh` | POST | ⬜ Planned |
-| `/auth/forgot-password` | POST | ⬜ Planned |
-| `/auth/reset-password` | POST | ⬜ Planned |
-| `/auth/verify-email` | GET | ⬜ Planned |
-| `/auth/google` | GET | ⬜ Planned |
-| `/auth/github` | GET | ⬜ Planned |
+- Resource-oriented URLs
+- JSON request/response bodies
+- JWT authentication
+- Consistent HTTP status codes
+- Validation on every request
+- Thin controllers
+- Business logic in services
+- Consistent response models
 
 ---
 
-### User APIs
+# Authentication
 
-| Endpoint | Method | Status |
-|----------|--------|--------|
-| `/users/me` | GET | ✅ Implemented |
-| `/users/me` | PATCH | ✅ Implemented |
-| `/users/:id` | GET | ⬜ Planned |
-| `/users/:username` | GET | ⬜ Planned |
-| `/users` | GET | ⬜ Planned |
+## Register
 
----
-
-### Profile APIs
-
-| Endpoint | Method | Status |
-|----------|--------|--------|
-| Public Profile | ⬜ Planned |
-| Profile Search | ⬜ Planned |
-
----
-
-# Sprint 2 Planned APIs
-
-The following APIs are expected to be implemented during Sprint 2.
-
-## Social Graph
-
-| Endpoint | Method | Status |
-|----------|--------|--------|
-| `/users/:username/follow` | POST | ⬜ Planned |
-| `/users/:username/follow` | DELETE | ⬜ Planned |
-| `/users/:username/followers` | GET | ⬜ Planned |
-| `/users/:username/following` | GET | ⬜ Planned |
-
----
-
-# Upcoming Modules
-
-## Sprint 3
-
-Community
-
-- Community Posts
-- Comments
-- Likes
-- Bookmarks
-
-Status
-
-⬜ Planned
-
----
-
-## Sprint 4
-
-Workspaces
-
-Status
-
-⬜ Planned
-
----
-
-## Sprint 5
-
-Channels
-
-Status
-
-⬜ Planned
-
----
-
-## Sprint 6
-
-Projects
-
-Status
-
-⬜ Planned
-
----
-
-## Sprint 7
-
-Notifications
-
-Status
-
-⬜ Planned
-
----
-
-## Sprint 8
-
-AI
-
-Status
-
-⬜ Planned
-
----
-
-# API Progress
-
-```text
-████████████████░░░░░░░░░░░░░░░░░░░░░░░ 40%
+```http
+POST /auth/register
 ```
 
-| Module | Status |
-|---------|--------|
-| Authentication | ✅ |
-| Authorization | ✅ |
-| Users | ✅ |
-| Profiles | 🟡 |
-| Social Graph | ⬜ |
-| Community | ⬜ |
-| Workspaces | ⬜ |
-| Channels | ⬜ |
-| Projects | ⬜ |
-| Notifications | ⬜ |
-| AI | ⬜ |
+Creates a new user account.
 
 ---
 
-# Documentation Policy
+## Login
 
-This document serves two purposes:
-
-1. Define the REST API standards for XEEO.
-2. Track the implementation status of every API module.
-
-The API standards described in this document remain stable throughout Version 1.0.
-
-After every completed sprint, only the following sections should be updated:
-
-- API Implementation Progress
-- Planned APIs
-- API Progress
-
-All other architectural guidelines should remain unchanged unless the API architecture itself changes.
-
----
-
-# Design Principles
-
-The API should be:
-
-* RESTful
-* Consistent
-* Predictable
-* Secure
-* Versioned
-* Easy to document
-* Easy to consume
-
----
-
-# Base URL
-
-Development
-
-```text id="r4udc2"
-http://localhost:3001/api/v1
+```http
+POST /auth/login
 ```
 
-Production
-
-```text id="rzmb3x"
-https://api.xeeo.app/api/v1
-```
+Authenticates a user and returns an access token.
 
 ---
 
-# Versioning
+## Change Password
 
-Every endpoint begins with:
-
-```text id="y0q7y9"
-/api/v1
+```http
+PATCH /auth/change-password
 ```
 
-Future versions:
+Authentication Required
 
-```text id="ebvjlwm"
-/api/v2
-```
-
-Breaking changes should only be introduced in a new API version.
+Changes the authenticated user's password.
 
 ---
 
-# Resource Naming
+# Users
 
-Use plural nouns.
+## Get Current User
 
-Correct:
-
-```text id="ewbwtb"
-/users
-
-/workspaces
-
-/projects
-
-/messages
-
-/comments
+```http
+GET /users/me
 ```
 
-Incorrect:
+Authentication Required
 
-```text id="mdqprr"
-/getUsers
-
-/createProject
-
-/updateProfile
-```
-
-Use HTTP methods instead.
+Returns the authenticated user and profile.
 
 ---
 
-# HTTP Methods
+## Update Account
 
-| Method | Purpose               |
-| ------ | --------------------- |
-| GET    | Retrieve data         |
-| POST   | Create data           |
-| PUT    | Replace data          |
-| PATCH  | Partially update data |
-| DELETE | Remove data           |
-
----
-
-# Standard Response Format
-
-Success:
-
-```json id="dhd1el"
-{
-  "success": true,
-  "data": {},
-  "message": "Operation completed successfully."
-}
+```http
+PATCH /users/me
 ```
 
+Authentication Required
+
+Updates:
+
+- username
+- email
+
 ---
 
-Failure:
+## Update Profile
 
-```json id="d1pjjo"
-{
-  "success": false,
-  "message": "Validation failed.",
-  "error": {
-    "code": "VALIDATION_ERROR"
-  }
-}
+```http
+PATCH /users/me/profile
 ```
 
+Authentication Required
+
+Updates:
+
+- displayName
+- bio
+- avatarUrl
+- bannerUrl
+- location
+- website
+- portfolioUrl
+- githubUrl
+- linkedinUrl
+- twitterUrl
+- experienceLevel
+- availability
+
 ---
 
-# HTTP Status Codes
+# Developers
 
-| Code | Meaning               |
-| ---- | --------------------- |
-| 200  | OK                    |
-| 201  | Created               |
-| 204  | No Content            |
-| 400  | Bad Request           |
-| 401  | Unauthorized          |
-| 403  | Forbidden             |
-| 404  | Not Found             |
-| 409  | Conflict              |
-| 422  | Validation Error      |
-| 429  | Too Many Requests     |
-| 500  | Internal Server Error |
+## Public Developer Profile
+
+```http
+GET /developers/:username
+```
+
+Public Endpoint
+
+Returns:
+
+- Public profile
+- Skills
+- Followers count
+- Following count
+
+No private account information is exposed.
+
+---
+
+# Social Graph
+
+## Follow User
+
+```http
+POST /users/:username/follow
+```
+
+Authentication Required
+
+Creates a follow relationship.
+
+---
+
+## Unfollow User
+
+```http
+DELETE /users/:username/follow
+```
+
+Authentication Required
+
+Removes a follow relationship.
+
+---
+
+## Followers
+
+```http
+GET /users/:username/followers
+```
+
+Public Endpoint
+
+Returns followers of a developer.
+
+---
+
+## Following
+
+```http
+GET /users/:username/following
+```
+
+Public Endpoint
+
+Returns users followed by a developer.
 
 ---
 
@@ -332,365 +186,98 @@ Failure:
 
 Protected endpoints require:
 
-```http id="rjlwmr"
+```http
 Authorization: Bearer <access_token>
 ```
 
-Public endpoints:
+---
 
-* Register
-* Login
-* Community feed
-* Public profiles
-* Public projects
+# HTTP Status Codes
+
+| Code | Meaning |
+|------|---------|
+| 200 | Success |
+| 201 | Resource Created |
+| 400 | Validation Error / Business Rule Violation |
+| 401 | Unauthorized |
+| 403 | Forbidden |
+| 404 | Resource Not Found |
+| 409 | Conflict |
+| 500 | Internal Server Error |
 
 ---
 
-# Pagination
+# Validation Rules
 
-Request:
+All incoming requests are validated using `class-validator`.
 
-```http id="z1dr4l"
-GET /projects?page=1&limit=20
-```
+Validation includes:
 
-Response:
+- Required fields
+- Email format
+- URL format
+- String length
+- Enum values
+- Username uniqueness
+- Email uniqueness
 
-```json id="24qj9q"
-{
-  "success": true,
-  "data": [],
-  "pagination": {
-    "page": 1,
-    "limit": 20,
-    "totalItems": 248,
-    "totalPages": 13
-  }
-}
-```
+Invalid requests return structured validation errors.
 
 ---
 
-# Filtering
+# Response Principles
 
-Example:
+The API follows these conventions:
 
-```http id="ggqvva"
-GET /projects?status=ACTIVE
-```
-
-Multiple filters:
-
-```http id="v0kh6w"
-GET /projects?status=ACTIVE&visibility=PUBLIC
-```
+- Successful responses return the requested resource.
+- Validation errors provide meaningful messages.
+- Sensitive fields (such as password hashes) are never returned.
+- Public endpoints expose only public developer information.
 
 ---
 
-# Sorting
+# Sprint 1 API Summary
 
-Ascending:
-
-```http id="v5dk5m"
-?sort=createdAt
-```
-
-Descending:
-
-```http id="9wh3p2"
-?sort=-createdAt
-```
+| Module | Status |
+|--------|--------|
+| Authentication | ✅ |
+| Users | ✅ |
+| Profiles | ✅ |
+| Developers | ✅ |
+| Social Graph | ✅ |
 
 ---
 
-# Searching
+# Planned Future APIs
 
-Example:
+These APIs are intentionally deferred to later sprints:
 
-```http id="beybpd"
-GET /projects?search=chat
-```
+## Sprint 2
 
----
+- Projects
+- Project Members
+- Tech Stack
+- Tags
+- Stars
+- Forks
 
-# Field Selection (Future)
+## Sprint 3
 
-```http id="77rt4s"
-GET /users?fields=id,username
-```
+- Workspaces
+- Invitations
+- Permissions
 
----
+## Sprint 4
 
-# Validation
+- Discussions
+- Comments
+- Notifications
+- Activity Feed
 
-All request bodies must be validated.
+## Sprint 5
 
-Example rules:
-
-* Required fields
-* String length
-* Enum values
-* Email format
-* URL format
-* Numeric ranges
-
-Validation failures return:
-
-```http id="8b7a4g"
-422 Unprocessable Entity
-```
-
----
-
-# Error Codes
-
-Examples:
-
-```text id="9zbm1r"
-VALIDATION_ERROR
-
-INVALID_CREDENTIALS
-
-TOKEN_EXPIRED
-
-NOT_FOUND
-
-ACCESS_DENIED
-
-WORKSPACE_NOT_FOUND
-
-PROJECT_NOT_FOUND
-```
-
-Application-specific error codes should be consistent.
-
----
-
-# Rate Limiting
-
-Authentication endpoints:
-
-```text id="d8b0hd"
-5 requests / minute
-```
-
-General API:
-
-```text id="h08z6s"
-100 requests / minute
-```
-
-Values may change based on deployment requirements.
-
----
-
-# Idempotency
-
-* GET must never modify data.
-* DELETE should be idempotent.
-* PUT should fully replace a resource.
-* PATCH updates only specified fields.
-
----
-
-# Endpoint Structure
-
-## Authentication
-
-```text id="c50lp4"
-/auth/register
-
-/auth/login
-
-/auth/logout
-
-/auth/refresh
-```
-
----
-
-## Users
-
-```text id="r18t8q"
-/users
-
-/users/:id
-
-/users/me
-```
-
----
-
-## Profiles
-
-```text id="djlwmc"
-/profiles/:username
-```
-
----
-
-## Workspaces
-
-```text id="0lkm2d"
-/workspaces
-
-/workspaces/:id
-```
-
----
-
-## Channels
-
-```text id="ofjgfi"
-/channels
-
-/channels/:id/messages
-```
-
----
-
-## Projects
-
-```text id="zx10js"
-/projects
-
-/projects/:id
-```
-
----
-
-## Community
-
-```text id="c4r5qo"
-/community/posts
-
-/community/posts/:id
-```
-
----
-
-## Reviews
-
-```text id="wsbvj8"
-/reviews
-
-/reviews/:id
-```
-
----
-
-## AI
-
-```text id="63y2ih"
-/ai/conversations
-
-/ai/messages
-```
-
----
-
-# API Documentation
-
-Swagger/OpenAPI will be generated automatically from NestJS decorators.
-
-The API documentation should always reflect the current implementation.
-
----
-
-# Security
-
-Every request should include:
-
-* Authentication
-* Authorization
-* Validation
-* Rate limiting
-* Logging
-
-Sensitive data must never be exposed.
-
----
-
-# Logging
-
-Log:
-
-* Request ID
-* User ID (if authenticated)
-* Endpoint
-* Response status
-* Response time
-
-Avoid logging passwords, tokens, or other sensitive data.
-
----
-
-# Design Decisions
-
-* REST-first architecture.
-* Versioned API.
-* Consistent response format.
-* Plural resource names.
-* JWT authentication.
-* Validation before business logic.
-* Automatic Swagger documentation.
-
----
-
-# API Lifecycle
-
-```text id="w9gdvf"
-Request
-    │
-    ▼
-Validation
-    │
-    ▼
-Authentication
-    │
-    ▼
-Authorization
-    │
-    ▼
-Controller
-    │
-    ▼
-Service
-    │
-    ▼
-Prisma
-    │
-    ▼
-Database
-    │
-    ▼
-Response
-```
-
----
-
-# Future Enhancements
-
-* GraphQL gateway
-* API caching
-* API analytics
-* Webhooks
-* Batch requests
-* API keys
-* Public developer API
-
----
-
-# Summary
-
-The XEEO API follows REST principles with a consistent structure, standardized responses, JWT-based authentication, automatic documentation, and strong validation. These conventions ensure every module behaves predictably and remains easy to maintain as the platform grows.
-
----
-
-# Next Document
-
-```text id="2hm7kx"
-docs/system/04-WebSocket-Architecture.md
-```
-
-This document defines the real-time communication layer for XEEO, including Socket.IO architecture, event naming conventions, room management, presence tracking, typing indicators, and notification delivery.
+- Media Uploads
+- Email
+- Search
+- AI Features
+- Analytics
