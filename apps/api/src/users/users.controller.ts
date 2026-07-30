@@ -2,7 +2,10 @@ import { Body, Controller, Get, Patch } from '@nestjs/common';
 
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { JwtUser } from '../auth/interfaces/jwt-user.interface';
+
+import { UpdateAccountDto } from './dto/update-account.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+
 import { UserMapper } from './mappers/user.mapper';
 import { UsersService } from './users.service';
 
@@ -18,7 +21,20 @@ export class UsersController {
   }
 
   @Patch('me')
-  async updateMe(
+  async updateAccount(
+    @CurrentUser() user: JwtUser,
+    @Body() updateAccountDto: UpdateAccountDto,
+  ) {
+    const updatedUser = await this.usersService.updateAccount(
+      user.id,
+      updateAccountDto,
+    );
+
+    return UserMapper.toResponse(updatedUser);
+  }
+
+  @Patch('me/profile')
+  async updateProfile(
     @CurrentUser() user: JwtUser,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {

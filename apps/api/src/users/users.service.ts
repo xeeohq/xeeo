@@ -7,6 +7,7 @@ import {
 import { PrismaService } from '../prisma';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { userWithProfileInclude } from './constants/user.include';
+import { UpdateAccountDto } from './dto/update-account.dto';
 
 type CreateUserData = {
   email: string;
@@ -140,4 +141,54 @@ export class UsersService {
 
     return this.findByIdOrThrow(userId);
   }
+  async updateAccount(
+  userId: string,
+  updateAccountDto: UpdateAccountDto,
+) {
+  const hasUpdates =
+    updateAccountDto.username !== undefined ||
+    updateAccountDto.email !== undefined;
+
+  if (!hasUpdates) {
+    throw new BadRequestException(
+      'At least one field must be provided.',
+    );
+  }
+
+  const user = await this.findByIdOrThrow(userId);
+
+  const { username, email } = updateAccountDto;
+
+  if (username !== undefined && username !== user.username) {
+    const existingUser = await this.findByUsername(username);
+
+    if (existingUser) {
+      throw new BadRequestException(
+        'Username is already taken.',
+      );
+    }
+  }
+
+  if (email !== undefined && email !== user.email) {
+    const existingUser = await this.findByEmail(email);
+
+    if (existingUser) {
+      throw new BadRequestException(
+        'Email is already registered.',
+      );
+    }
+  }
+
+  await this.prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      username,
+      email,
+    },
+  });
+
+  return this.findByIdOrThrow(userId);
+}
 }

@@ -11,12 +11,15 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import type { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserMapper } from '../users/mappers/user.mapper';
+import { PrismaService } from '../prisma';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly prisma: PrismaService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -76,6 +79,43 @@ export class AuthService {
       user: UserMapper.toResponse(user),
     };
   }
+
+  async changePassword(
+  userId: string,
+  changePasswordDto: ChangePasswordDto,
+) {
+  const user = await this.usersService.findByIdOrThrow(userId);
+
+  if (!user.passwordHash) {
+    throw new BadRequestException('Password is not set.');
+  }
+
+  const passwordMatches = await argon2.verify(
+    user.passwordHash,
+    changePasswordDto.currentPassword,
+  );
+
+  if (!passwordMatches) {
+    throw new BadRequestException('Current password is incorrect.');
+  }
+
+  const passwordHash = await argon2.hash(
+    changePasswordDto.newPassword,
+  );
+
+  await this.prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      passwordHash,
+    },
+  });
+
+  return {
+    message: 'Password changed successfully.',
+  };
+}
 
   logout() {
     return {
