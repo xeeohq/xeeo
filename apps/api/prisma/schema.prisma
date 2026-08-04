@@ -48,6 +48,16 @@ enum SkillCategory {
   OTHER
 }
 
+enum ProjectVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+}
+
 model User {
   id String @id @default(cuid())
 
@@ -74,6 +84,8 @@ model User {
 
   // Skills
   skills UserSkill[]
+
+  projects Project[]
 
   @@index([status])
   @@index([createdAt])
@@ -123,6 +135,37 @@ model Skill {
   createdAt DateTime @default(now())
 
   users UserSkill[]
+}
+
+model Project {
+  id String @id @default(cuid())
+
+  ownerId String
+
+  name String
+  slug String @unique
+
+  description String? @db.VarChar(500)
+
+  visibility ProjectVisibility @default(PUBLIC)
+  status ProjectStatus @default(ACTIVE)
+
+  repositoryUrl String?
+  liveUrl String?
+  documentationUrl String?
+
+  readme String?
+
+  license String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
+  @@index([visibility])
+  @@index([status])
 }
 
 model UserSkill {
