@@ -60,7 +60,7 @@ export class CreateProjectDto {
   message: 'License name must be a string.',
 })
   @MaxLength(50, {
-  message: 'License must be at most 50 characters.',
+  message: 'License name must be at most 50 characters.',
 })
   license?: string;
 }
