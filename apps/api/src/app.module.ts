@@ -10,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { FollowModule } from './follow/follow.module';
 import { DeveloperModule } from './developer/developer.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { DeveloperModule } from './developer/developer.module';
     AdminModule,
     FollowModule,
     DeveloperModule,
+    ProjectsModule,
   ],
   controllers: [],
   providers: [

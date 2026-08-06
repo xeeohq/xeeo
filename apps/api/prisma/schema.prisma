@@ -154,7 +154,7 @@ model Project {
   liveUrl String?
   documentationUrl String?
 
-  readme String?
+  readme String? @db.Text
 
   license String?
 
