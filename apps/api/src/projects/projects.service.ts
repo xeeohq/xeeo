@@ -8,7 +8,9 @@ import {
 } from '@nestjs/common';
 
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { ProjectStatus } from '@prisma/client';
+import { ProjectStatus ,
+        ProjectVisibility,
+        } from '@prisma/client';
 
 @Injectable()
 export class ProjectsService {
@@ -141,6 +143,25 @@ async update(
   return ProjectMapper.toResponse(updatedProject);
 }
 
+async findPublicProjects() {
+  const projects = await this.prisma.project.findMany({
+    where: {
+      status: ProjectStatus.ACTIVE,
+      visibility: ProjectVisibility.PUBLIC,
+    },
+    include: {
+      owner: {
+        include: {
+          profile: true,
+        },
+      },
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  });
+  return projects.map(ProjectMapper.toResponse);
+}
 
 async remove(
   userId: string,

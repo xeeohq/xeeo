@@ -7,6 +7,7 @@ import { Get, Param } from '@nestjs/common';
 import { Patch } from '@nestjs/common';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Delete } from '@nestjs/common';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('projects')
 export class ProjectsController {
@@ -41,6 +42,13 @@ update(
     updateProjectDto,
   );
 }
+
+@Public()
+@Get('public')
+findPublicProjects() {
+  return this.projectsService.findPublicProjects();
+}
+
     @Get(':slug')
 findBySlug(
   @Param('slug') slug: string,

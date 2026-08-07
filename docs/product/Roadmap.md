@@ -2,9 +2,9 @@
 
 ## Version
 
-v4.0
+v4.1
 
-**Last Updated:** July 2026
+**Last Updated:** August 2026
 
 ---
 
@@ -25,8 +25,8 @@ XEEO follows a **documentation-first, architecture-driven** development process.
 # Overall Progress
 
 ```text
-████████████████████░░░░░░░░░░░░░░░░░░░░
-≈50%
+████████████████████████░░░░░░░░░░░░░░░░░░
+≈58%
 ```
 
 | Stage | Status |
@@ -38,7 +38,7 @@ XEEO follows a **documentation-first, architecture-driven** development process.
 | Project Initialization | ✅ Complete |
 | Core Sprint 0 | ✅ Complete |
 | Core Sprint 1 | ✅ Complete |
-| Core Sprint 2 | ⏳ Next |
+| Core Sprint 2 | 🟡 In Progress |
 | Core Sprint 3 | ⬜ Pending |
 | Core Sprint 4 | ⬜ Pending |
 | Core Sprint 5 | ⬜ Pending |
@@ -51,7 +51,7 @@ XEEO follows a **documentation-first, architecture-driven** development process.
 
 **Status**
 
-🟡 Ready to Start
+🟡 In Progress
 
 **Goal**
 
@@ -65,26 +65,26 @@ Every sprint follows the same workflow.
 
 ```text
 Planning
-      │
-      ▼
+    │
+    ▼
 Architecture
-      │
-      ▼
+    │
+    ▼
 Implementation
-      │
-      ▼
+    │
+    ▼
 Testing
-      │
-      ▼
+    │
+    ▼
 Documentation
-      │
-      ▼
+    │
+    ▼
 Git Commit
-      │
-      ▼
+    │
+    ▼
 Push
-      │
-      ▼
+    │
+    ▼
 Sprint Complete
 ```
 
@@ -137,7 +137,7 @@ Build the complete developer identity layer.
 
 ## Phase 1 — Authentication
 
-Completed
+✅ Completed
 
 - User Registration
 - Login
@@ -153,7 +153,7 @@ Completed
 
 ## Phase 2 — Users
 
-Completed
+✅ Completed
 
 - Current User
 - User Mapper
@@ -165,7 +165,7 @@ Completed
 
 ## Phase 3 — Social Graph
 
-Completed
+✅ Completed
 
 - Follow User
 - Unfollow User
@@ -177,9 +177,9 @@ Completed
 
 ## Phase 4 — Profile & Account
 
-Completed
+✅ Completed
 
-Profile
+### Profile
 
 - Display Name
 - Bio
@@ -194,13 +194,13 @@ Profile
 - Experience Level
 - Availability
 
-Account
+### Account
 
 - Username Update
 - Email Update
 - Password Change
 
-Developer
+### Developer
 
 - Public Developer Profile
 
@@ -212,28 +212,82 @@ Developer
 
 ---
 
-# Core Sprint 2 — Projects
+## Core Sprint 2 — Projects
 
-Status
-
-🟡 Ready to Start
-
-Planned modules
-
-- Project Creation
-- Project Visibility
-- Tech Stack
-- Tags
-- Project Members
-- Project Discovery
-- Stars
-- Forks
+### Status
+🟡 In Progress
 
 ---
 
+## Phase 1 — Project Foundation
+Status: ✅ Completed
+
+- [x] Project model
+- [x] Prisma schema
+- [x] Relations
+- [x] Projects module
+- [x] DTOs
+- [x] Mapper
+- [x] CRUD foundation
+
+---
+
+## Phase 2 — Project Management
+Status: ✅ Completed
+
+- [x] Create Project
+- [x] Update Project
+- [x] Archive Project (Soft Delete)
+- [x] Project Visibility
+- [x] README
+- [x] License
+- [x] Repository URL
+- [x] Documentation URL
+- [x] Live URL
+
+---
+
+## Phase 3 — Discovery
+Status: ✅ Completed
+
+Implemented
+
+- [x] Public Projects endpoint
+- [x] Public project listing
+- [x] Only ACTIVE + PUBLIC projects
+- [x] Latest updated ordering
+
+Deferred (Future Sprint)
+
+- [ ] Full Search
+- [ ] Trending
+- [ ] Advanced Filters
+
+Reason:
+Deferred until Projects have richer metadata (Tags, Tech Stack, Stars, Forks, etc.) so Discovery can be built once instead of being redesigned later.
+
+---
+
+## Phase 4 — Project Collaboration
+Status: ⏳ Next
+
+- [ ] Members
+- [ ] Roles
+- [ ] Invitations (Foundation)
+
+---
+
+## Phase 5 — Engagement
+Status: Pending
+
+- [ ] Stars
+- [ ] Forks
+- [ ] Counts
+
+---
 # Core Sprint 3 — Workspaces
 
-Status
+**Status**
 
 ⬜ Pending
 
@@ -249,7 +303,7 @@ Planned modules
 
 # Core Sprint 4 — Collaboration
 
-Status
+**Status**
 
 ⬜ Pending
 
@@ -265,7 +319,7 @@ Planned modules
 
 # Core Sprint 5 — Production Readiness
 
-Status
+**Status**
 
 ⬜ Pending
 
@@ -285,11 +339,26 @@ Planned modules
 
 # Deferred Features
 
-The following features were intentionally postponed because they are product enhancements rather than Sprint 1 foundations.
+The following features were intentionally postponed because they are product enhancements rather than current sprint requirements.
 
 - Profile Completeness
 - Username Availability API
 - Profile Suggestions
 - Developer Profile Preview
 
-These will be scheduled in a future sprint after the core platform modules are complete.
+## Future Discovery Features
+
+These features are intentionally postponed until the required project metadata
+and engagement systems are available.
+
+- Global Project Search
+- Search by Tags
+- Search by Tech Stack
+- Search by Username
+- Search by Organization
+- Trending Projects
+- Featured Projects
+- Recommended Projects
+- Advanced Filters
+- Sorting
+- Pagination
