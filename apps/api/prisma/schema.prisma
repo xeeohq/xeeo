@@ -58,6 +58,11 @@ enum ProjectStatus {
   ARCHIVED
 }
 
+enum ProjectMemberRole {
+  ADMIN
+  MEMBER
+}
+
 model User {
   id String @id @default(cuid())
 
@@ -86,6 +91,7 @@ model User {
   skills UserSkill[]
 
   projects Project[]
+  projectMemberships ProjectMember[]
 
   @@index([status])
   @@index([createdAt])
@@ -163,9 +169,28 @@ model Project {
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
+  members ProjectMember[]
+
   @@index([ownerId])
   @@index([visibility])
   @@index([status])
+}
+
+model ProjectMember {
+  projectId String
+  userId    String
+
+  role ProjectMemberRole @default(MEMBER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
 }
 
 model UserSkill {

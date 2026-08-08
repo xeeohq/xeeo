@@ -5,12 +5,18 @@ import { ProjectMapper } from './mappers/project.mapper';
 import {
   ForbiddenException,
   NotFoundException,
+  BadRequestException,
+  ConflictException
 } from '@nestjs/common';
 
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectStatus ,
         ProjectVisibility,
+        ProjectMemberRole,
         } from '@prisma/client';
+import { AddProjectMemberDto } from './dto/add-project-member.dto';
+import { UpdateProjectMemberDto } from './dto/update-project-member.dto';
+
 
 @Injectable()
 export class ProjectsService {
@@ -190,6 +196,234 @@ async remove(
 
   return {
     message: 'Project archived successfully',
+  };
+}
+
+async getMembers(slug: string) {
+  const project = await this.prisma.project.findUnique({
+    where: { slug },
+  });
+
+  if (!project) {
+    throw new NotFoundException('Project not found');
+  }
+
+  const members = await this.prisma.projectMember.findMany({
+  where: {
+    projectId: project.id,
+  },
+  select: {
+    projectId: true,
+    userId: true,
+    role: true,
+    createdAt: true,
+    updatedAt: true,
+    user: {
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        profile: true,
+      },
+    },
+  },
+  orderBy: {
+    createdAt: 'asc',
+  },
+});
+
+return members;
+}
+
+async addMember(
+  ownerId: string,
+  slug: string,
+  dto: AddProjectMemberDto,
+) {
+  const project = await this.prisma.project.findUnique({
+    where: { slug },
+  });
+
+  if (!project) {
+    throw new NotFoundException('Project not found');
+  }
+
+  if (project.ownerId !== ownerId) {
+    throw new ForbiddenException(
+      'You are not the owner of this project',
+    );
+  }
+
+  if (project.status !== ProjectStatus.ACTIVE) {
+    throw new BadRequestException(
+      'Archived projects cannot have members added',
+    );
+  }
+
+  if (dto.userId === ownerId) {
+    throw new BadRequestException(
+      'Project owner does not need to be added as a member',
+    );
+  }
+
+  const user = await this.prisma.user.findUnique({
+    where: {
+      id: dto.userId,
+    },
+  });
+
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  const existingMember =
+    await this.prisma.projectMember.findUnique({
+      where: {
+        projectId_userId: {
+          projectId: project.id,
+          userId: dto.userId,
+        },
+      },
+    });
+
+  if (existingMember) {
+    throw new ConflictException(
+      'User is already a member of this project',
+    );
+  }
+
+  return this.prisma.projectMember.create({
+  data: {
+    projectId: project.id,
+    userId: dto.userId,
+    role: dto.role,
+  },
+  select: {
+    projectId: true,
+    userId: true,
+    role: true,
+    createdAt: true,
+    updatedAt: true,
+    user: {
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        profile: true,
+      },
+    },
+  },
+});
+}
+
+async updateMemberRole(
+  ownerId: string,
+  slug: string,
+  userId: string,
+  dto: UpdateProjectMemberDto,
+) {
+  const project = await this.prisma.project.findUnique({
+    where: { slug },
+  });
+
+  if (!project) {
+    throw new NotFoundException('Project not found');
+  }
+
+  if (project.ownerId !== ownerId) {
+    throw new ForbiddenException(
+      'You are not the owner of this project',
+    );
+  }
+
+  const member = await this.prisma.projectMember.findUnique({
+    where: {
+      projectId_userId: {
+        projectId: project.id,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new NotFoundException(
+      'Project member not found',
+    );
+  }
+
+  return this.prisma.projectMember.update({
+    where: {
+      projectId_userId: {
+        projectId: project.id,
+        userId,
+      },
+    },
+    data: {
+      role: dto.role,
+    },
+    select: {
+  projectId: true,
+  userId: true,
+  role: true,
+  createdAt: true,
+  updatedAt: true,
+  user: {
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      profile: true,
+    },
+  },
+},
+});
+}
+
+async removeMember(
+  ownerId: string,
+  slug: string,
+  userId: string,
+) {
+  const project = await this.prisma.project.findUnique({
+    where: { slug },
+  });
+
+  if (!project) {
+    throw new NotFoundException('Project not found');
+  }
+
+  if (project.ownerId !== ownerId) {
+    throw new ForbiddenException(
+      'You are not the owner of this project',
+    );
+  }
+
+  const member = await this.prisma.projectMember.findUnique({
+    where: {
+      projectId_userId: {
+        projectId: project.id,
+        userId,
+      },
+    },
+  });
+
+  if (!member) {
+    throw new NotFoundException(
+      'Project member not found',
+    );
+  }
+
+  await this.prisma.projectMember.delete({
+    where: {
+      projectId_userId: {
+        projectId: project.id,
+        userId,
+      },
+    },
+  });
+
+  return {
+    message: 'Project member removed successfully',
   };
 }
 

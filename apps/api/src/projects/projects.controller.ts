@@ -1,13 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
-
+import { Body, Controller, Post, Get, Param, Delete, Patch } from '@nestjs/common';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectsService } from './projects.service';
-import { Get, Param } from '@nestjs/common';
-import { Patch } from '@nestjs/common';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { Delete } from '@nestjs/common';
 import { Public } from '../auth/decorators/public.decorator';
+import { AddProjectMemberDto } from './dto/add-project-member.dto';
+import { UpdateProjectMemberDto } from './dto/update-project-member.dto';
 
 @Controller('projects')
 export class ProjectsController {
@@ -64,6 +62,54 @@ remove(
   return this.projectsService.remove(
     user.id,
     slug,
+  );
+}
+
+@Get(':slug/members')
+getMembers(
+  @Param('slug') slug: string,
+) {
+  return this.projectsService.getMembers(slug);
+}
+
+@Post(':slug/members')
+addMember(
+  @CurrentUser() user: any,
+  @Param('slug') slug: string,
+  @Body() addProjectMemberDto: AddProjectMemberDto,
+) {
+  return this.projectsService.addMember(
+    user.id,
+    slug,
+    addProjectMemberDto,
+  );
+}
+
+@Patch(':slug/members/:userId')
+updateMemberRole(
+  @CurrentUser() user: any,
+  @Param('slug') slug: string,
+  @Param('userId') userId: string,
+  @Body() updateProjectMemberDto: UpdateProjectMemberDto,
+) {
+  return this.projectsService.updateMemberRole(
+    user.id,
+    slug,
+    userId,
+    updateProjectMemberDto,
+  );
+}
+
+@Delete(':slug/members/:userId')
+removeMember(
+  @CurrentUser() user: any,
+  @Param('slug') slug: string,
+  @Param('userId') userId: string,
+) {
+  return this.projectsService.removeMember(
+    user.id,
+    slug,
+    userId,
   );
 }
 
