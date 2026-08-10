@@ -65,6 +65,28 @@ remove(
   );
 }
 
+@Post(':slug/star')
+starProject(
+  @CurrentUser() user: any,
+  @Param('slug') slug: string,
+) {
+  return this.projectsService.starProject(
+    user.id,
+    slug,
+  );
+}
+
+@Delete(':slug/star')
+unstarProject(
+  @CurrentUser() user: any,
+  @Param('slug') slug: string,
+) {
+  return this.projectsService.unstarProject(
+    user.id,
+    slug,
+  );
+}
+
 @Get(':slug/members')
 getMembers(
   @Param('slug') slug: string,

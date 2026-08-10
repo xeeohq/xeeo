@@ -115,6 +115,7 @@ async findBySlug(slug: string) {
 
   return ProjectMapper.toResponse(project);
 }
+
 async update(
   userId: string,
   slug: string,
@@ -424,6 +425,92 @@ async removeMember(
 
   return {
     message: 'Project member removed successfully',
+  };
+}
+
+async starProject(
+  userId: string,
+  slug: string,
+) {
+  const project = await this.prisma.project.findUnique({
+    where: { slug },
+  });
+
+  if (!project) {
+    throw new NotFoundException('Project not found');
+  }
+
+  if (project.status !== ProjectStatus.ACTIVE) {
+    throw new BadRequestException(
+      'Archived projects cannot be starred',
+    );
+  }
+
+  const existingStar = await this.prisma.projectStar.findUnique({
+    where: {
+      projectId_userId: {
+        projectId: project.id,
+        userId,
+      },
+    },
+  });
+
+  if (existingStar) {
+    throw new ConflictException(
+      'You have already starred this project',
+    );
+  }
+
+  await this.prisma.projectStar.create({
+    data: {
+      projectId: project.id,
+      userId,
+    },
+  });
+
+  return {
+    message: 'Project starred successfully',
+  };
+}
+
+async unstarProject(
+  userId: string,
+  slug: string,
+) {
+  const project = await this.prisma.project.findUnique({
+    where: { slug },
+  });
+
+  if (!project) {
+    throw new NotFoundException('Project not found');
+  }
+
+  const existingStar = await this.prisma.projectStar.findUnique({
+    where: {
+      projectId_userId: {
+        projectId: project.id,
+        userId,
+      },
+    },
+  });
+
+  if (!existingStar) {
+    throw new NotFoundException(
+      'You have not starred this project',
+    );
+  }
+
+  await this.prisma.projectStar.delete({
+    where: {
+      projectId_userId: {
+        projectId: project.id,
+        userId,
+      },
+    },
+  });
+
+  return {
+    message: 'Project unstarred successfully',
   };
 }
 

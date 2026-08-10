@@ -92,6 +92,7 @@ model User {
 
   projects Project[]
   projectMemberships ProjectMember[]
+  projectStars ProjectStar[]
 
   @@index([status])
   @@index([createdAt])
@@ -170,6 +171,7 @@ model Project {
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   members ProjectMember[]
+  stars ProjectStar[]
 
   @@index([ownerId])
   @@index([visibility])
@@ -184,6 +186,20 @@ model ProjectMember {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
+}
+
+model ProjectStar {
+  projectId String
+  userId    String
+
+  createdAt DateTime @default(now())
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
