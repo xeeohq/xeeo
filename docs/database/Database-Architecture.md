@@ -2,7 +2,7 @@
 
 ## Version
 
-v1.0
+v2.0
 
 ---
 
@@ -10,9 +10,20 @@ v1.0
 
 This document defines the overall database architecture of XEEO.
 
-Rather than focusing on tables or SQL implementation, this document models the real-world entities that exist in the platform and how they relate to one another.
+It models the real-world entities used by the platform and the relationships between them.
 
-It serves as the foundation for the database schema, API design, and backend architecture.
+It serves as the architectural foundation for:
+
+- Database schema
+- Prisma models
+- API design
+- Backend modules
+- Authorization
+- Future platform expansion
+
+This document describes the intended V1 architecture.
+
+The current implementation may temporarily lag behind the target relationships while the system is built incrementally.
 
 ---
 
@@ -20,69 +31,169 @@ It serves as the foundation for the database schema, API design, and backend arc
 
 The database should follow these principles:
 
-* Normalize data to reduce duplication.
-* Keep relationships clear and predictable.
-* Design for scalability from the beginning.
-* Separate features into logical modules.
-* Store only the data required by each entity.
-* Prefer references between entities instead of duplicated information.
-* Keep the schema flexible for future features.
+- Normalize data to reduce duplication.
+- Keep relationships clear and predictable.
+- Design for scalability.
+- Separate features into logical modules.
+- Store only data required by each entity.
+- Prefer references between entities.
+- Avoid unnecessary duplication.
+- Preserve important historical information.
+- Keep business rules primarily in the application layer.
+- Avoid premature complexity.
+
+---
+
+# Core Architecture
+
+The high-level platform relationship is:
+
+```text
+User
+ │
+ ├── Profile
+ │
+ ├── Workspaces
+ │      ├── Workspace Members
+ │      ├── Invitations
+ │      ├── Channels
+ │      │      └── Messages
+ │      │
+ │      └── Projects
+ │             ├── Project Members
+ │             └── Reviews
+ │
+ ├── Community
+ │      ├── Community Posts
+ │      ├── Comments
+ │      ├── Likes
+ │      └── Bookmarks
+ │
+ ├── Notifications
+ │
+ └── AI Conversations
+        └── AI Messages
+```
 
 ---
 
 # Core Entities
 
-These entities form the backbone of XEEO.
-
 ## User
 
-Represents every registered user on the platform.
+Represents every registered developer.
 
 Responsibilities:
 
-* Authentication
-* Identity
-* Ownership
-* Collaboration
-* Community participation
+- Authentication
+- Identity
+- Ownership
+- Workspace participation
+- Project participation
+- Community participation
+- AI conversations
+
+---
+
+## Profile
+
+Stores public developer information.
+
+Examples:
+
+- Display name
+- Bio
+- Avatar
+- Banner
+- Skills
+- Portfolio
+- Social links
 
 ---
 
 ## Workspace
 
-A collaborative space where teams work together.
+A Workspace is the primary organizational environment for a development team.
 
 Responsibilities:
 
-* Team organization
-* Member management
-* Project organization
-* Channel organization
+- Team organization
+- Member management
+- Permissions
+- Project organization
+- Channel organization
+- Workspace configuration
+
+A user may own multiple Workspaces and participate in multiple Workspaces.
+
+---
+
+## Workspace Member
+
+Connects Users to Workspaces.
+
+Responsibilities:
+
+- Membership
+- Workspace roles
+- Membership status
+- Permission foundation
+- Membership lifecycle
+
+---
+
+## Invitation
+
+Represents a Workspace invitation.
+
+Responsibilities:
+
+- Invitation creation
+- Invitation tracking
+- Invitation validation
+- Acceptance
+- Rejection/decline
+- Membership creation after acceptance
 
 ---
 
 ## Channel
 
-Organizes communication inside a workspace.
+Organizes communication inside a Workspace.
 
 Responsibilities:
 
-* Discussions
-* Announcements
-* Topic-based conversations
+- Discussions
+- Announcements
+- Topic-based conversations
+
+V1 channel types:
+
+- TEXT
+- ANNOUNCEMENT
 
 ---
 
 ## Message
 
-Represents a chat message inside a channel.
+Represents a message inside a Channel.
 
 Responsibilities:
 
-* Text communication
-* Mentions
-* Reactions
-* Attachments
+- Text communication
+- Author
+- Timestamps
+- Editing
+- Deletion
+- Message history
+- Real-time delivery
+
+Future message capabilities may include:
+
+- Reactions
+- Attachments
+- Threads
+- Advanced message features
 
 ---
 
@@ -92,10 +203,73 @@ Represents a software project.
 
 Responsibilities:
 
-* Team collaboration
-* Progress tracking
-* Reviews
-* AI assistance
+- Project information
+- Project ownership
+- Project collaboration
+- Project visibility
+- Project members
+- Project discovery
+- Project engagement
+
+### Target Relationship
+
+```text
+Workspace
+    │
+    └── contains
+          │
+        Project
+```
+
+Every final V1 Project belongs to exactly one Workspace.
+
+### Implementation Note
+
+Projects were implemented during Sprint 2 before the Workspace system existed.
+
+Therefore:
+
+```text
+Sprint 2
+Project
+    ↓
+independent implementation
+
+Sprint 3
+Workspace
+    ↓
+Project integration phase
+```
+
+The Workspace → Project relationship will be introduced during the dedicated Project Integration phase of Sprint 3.
+
+---
+
+## Project Member
+
+Connects Users to Projects.
+
+Responsibilities:
+
+- Project membership
+- Project roles
+- Project access
+
+### V1 Rule
+
+A user must be an active Workspace Member before becoming a Project Member of a project belonging to that Workspace.
+
+This rule is enforced during Workspace/Project integration.
+
+---
+
+## Review
+
+Represents future structured project review capabilities.
+
+### Priority
+
+Post-V1.
 
 ---
 
@@ -103,87 +277,41 @@ Responsibilities:
 
 Represents public content shared with the developer community.
 
-Responsibilities:
-
-* Project showcase
-* Discussions
-* Learning
-* Discovery
-
----
-
-# Supporting Entities
-
-These support the core entities and manage relationships.
-
-## Profile
-
-Stores additional user information.
-
-Examples:
-
-* Bio
-* Skills
-* Portfolio
-* Social links
-
----
-
-## Workspace Member
-
-Connects users to workspaces.
+V1 community content is primarily centered around public project publishing and discovery.
 
 Responsibilities:
 
-* Membership
-* Roles
-* Permissions
-
----
-
-## Invitation
-
-Represents invitations sent to users.
-
-Responsibilities:
-
-* Invite tracking
-* Join workflow
-
----
-
-## Project Member
-
-Connects users to projects.
-
-Responsibilities:
-
-* Team membership
-* Project roles
+- Project showcase
+- Public discovery
+- Community interaction
 
 ---
 
 ## Comment
 
-Comments on community posts.
+Represents a comment on community content.
 
----
+V1 responsibilities:
 
-## Review
-
-Technical reviews for projects.
+- Create comment
+- Retrieve comments
+- Edit own comment
+- Delete own comment
+- Authorization
 
 ---
 
 ## Like
 
-Represents likes on community posts.
+Represents a community interaction.
+
+A Community Like is separate from Project Star.
 
 ---
 
 ## Bookmark
 
-Allows users to save community posts.
+Allows users to save community content.
 
 ---
 
@@ -193,66 +321,70 @@ Represents relationships between users.
 
 ---
 
+## Project Star
+
+Represents a user's star on a Project.
+
+Project Star is separate from Community Like.
+
+V1:
+
+- Star
+- Unstar
+- Duplicate protection
+
+Future:
+
+- Engagement counts
+- Fork-related engagement
+
+---
+
 ## Notification
 
-Stores platform notifications.
+Stores user notifications.
 
-Examples:
+Potential V1 events include:
 
-* Mentions
-* Invitations
-* Project updates
-* Community interactions
+- Workspace invitations
+- Mentions
+- Project activity
+- Community interactions
+- Relevant system events
 
 ---
 
 ## AI Conversation
 
-Represents a conversation between a user and the AI assistant.
+Represents a conversation between a User and the AI assistant.
+
+V1 AI is conversational and provider-agnostic.
 
 ---
 
 ## AI Message
 
-Individual messages inside an AI conversation.
-
----
-
-## Attachment
-
-Files uploaded within messages or projects.
-
----
-
-## Activity Log
-
-Records important events within workspaces and projects.
-
-Examples:
-
-* Project created
-* Member invited
-* Review submitted
-* Workspace updated
+Represents an individual message inside an AI Conversation.
 
 ---
 
 # Database Modules
 
-The database is divided into logical modules.
-
 ## Identity Module
 
 Entities:
 
-* User
-* Profile
-* Session (future)
-* OAuth Account (future)
+- User
+- Profile
+
+Future:
+
+- Sessions
+- OAuth Accounts
 
 Purpose:
 
-Authentication and user identity.
+Authentication and developer identity.
 
 ---
 
@@ -260,13 +392,13 @@ Authentication and user identity.
 
 Entities:
 
-* Workspace
-* Workspace Member
-* Invitation
+- Workspace
+- Workspace Member
+- Invitation
 
 Purpose:
 
-Team management and collaboration.
+Team organization and collaboration.
 
 ---
 
@@ -274,14 +406,18 @@ Team management and collaboration.
 
 Entities:
 
-* Channel
-* Message
-* Attachment
-* Reaction (future)
+- Channel
+- Message
+
+Future:
+
+- Attachments
+- Reactions
+- Threads
 
 Purpose:
 
-Real-time communication.
+Real-time workspace communication.
 
 ---
 
@@ -289,13 +425,16 @@ Real-time communication.
 
 Entities:
 
-* Project
-* Project Member
-* Review
+- Project
+- Project Member
+
+Post-V1:
+
+- Review
 
 Purpose:
 
-Software project management.
+Software project management and collaboration.
 
 ---
 
@@ -303,11 +442,11 @@ Software project management.
 
 Entities:
 
-* Community Post
-* Comment
-* Like
-* Bookmark
-* Follow
+- Community Post
+- Comment
+- Like
+- Bookmark
+- Follow
 
 Purpose:
 
@@ -315,156 +454,292 @@ Developer community and project discovery.
 
 ---
 
-## AI Module
-
-Entities:
-
-* AI Conversation
-* AI Message
-
-Purpose:
-
-AI-powered developer assistance.
-
----
-
 ## Platform Module
 
 Entities:
 
-* Notification
-* Activity Log
+- Notification
+
+Future:
+
+- Activity Log
+- Advanced platform analytics
 
 Purpose:
 
-Platform-wide communication and activity tracking.
+Platform-wide notifications and supporting services.
+
+---
+
+## AI Module
+
+Entities:
+
+- AI Conversation
+- AI Message
+
+Purpose:
+
+Basic AI developer assistance.
+
+Future:
+
+- Relational AI
+- Project-aware AI
+- Codebase-aware AI
+- AI agents
 
 ---
 
 # Entity Relationships
 
-The following describes the high-level relationships.
+## User → Workspace
 
 ```text
 User
-│
-├── owns → Workspaces
-├── joins → Workspaces
-├── creates → Projects
-├── joins → Projects
-├── sends → Messages
-├── creates → Community Posts
-├── writes → Comments
-├── writes → Reviews
-├── receives → Notifications
-└── starts → AI Conversations
+ │
+ ├── owns → Workspace
+ │
+ └── joins → Workspace
 ```
 
+Membership is represented through `WorkspaceMember`.
+
 ---
+
+## Workspace → Members
 
 ```text
 Workspace
-│
-├── contains → Channels
-├── contains → Projects
-├── contains → Members
-└── records → Activity Logs
+    │
+    └── WorkspaceMember
+             │
+             └── User
 ```
 
+A Workspace can have many members.
+
+A User can belong to many Workspaces.
+
 ---
+
+## Workspace → Projects
 
 ```text
-Channel
-│
-└── contains → Messages
+Workspace
+    │
+    └── Project
+```
+
+A Workspace can contain many Projects.
+
+A Project belongs to one Workspace in the target V1 architecture.
+
+---
+
+## Workspace → Channels
+
+```text
+Workspace
+    │
+    └── Channel
+            │
+            └── Message
 ```
 
 ---
+
+## Project → Members
 
 ```text
 Project
-│
-├── has → Members
-├── has → Reviews
-├── has → Activity Logs
-└── uses → AI Conversations
+    │
+    └── ProjectMember
+             │
+             └── User
 ```
 
+Project membership is constrained by Workspace membership after Project/Workspace integration.
+
 ---
+
+## Community
 
 ```text
 Community Post
-│
-├── has → Comments
-├── has → Likes
-└── has → Bookmarks
+    │
+    ├── Comments
+    ├── Likes
+    └── Bookmarks
 ```
 
 ---
 
-# MVP Database Scope
+## AI
 
-The first release of XEEO will include the following entities:
-
-* User
-* Profile
-* Workspace
-* Workspace Member
-* Invitation
-* Channel
-* Message
-* Project
-* Project Member
-* Community Post
-* Comment
-* Review
-* Notification
-* AI Conversation
-* AI Message
-
-Additional entities such as Attachments, Reactions, Sessions, OAuth Accounts, Activity Logs, and advanced collaboration features will be introduced in later versions.
+```text
+User
+ │
+ └── AI Conversation
+        │
+        └── AI Message
+```
 
 ---
 
-# Database Design Rules
+# V1 Database Scope
 
-* Every entity has a unique identifier.
-* Every record stores creation and update timestamps.
-* Relationships should use foreign keys.
-* Deletion rules must preserve important historical data where appropriate.
-* Avoid duplicate data whenever possible.
-* Business logic belongs in the application layer, not the database.
+The intended V1 database contains:
+
+## Identity
+
+- User
+- Profile
+
+## Workspace
+
+- Workspace
+- Workspace Member
+- Invitation
+
+## Communication
+
+- Channel
+- Message
+
+## Projects
+
+- Project
+- Project Member
+
+## Community
+
+- Community Post
+- Comment
+- Like
+- Bookmark
+- Follow
+
+## Platform
+
+- Notification
+
+## AI
+
+- AI Conversation
+- AI Message
+
+Additional entities are introduced only when their corresponding feature is intentionally brought into scope.
+
+---
+
+# Future Database Entities
+
+Potential future entities include:
+
+- Attachments
+- Reactions
+- Sessions
+- OAuth Accounts
+- Activity Logs
+- Tasks
+- Documentation
+- Code Reviews
+- Git integrations
+- AI context/relationship models
+- Voice/video sessions
+- Shared terminal sessions
+
+---
+
+# Database Rules
+
+- Every entity has a unique identifier.
+- Every important record has creation and update timestamps.
+- Relationships use foreign keys.
+- Unique constraints protect logical relationships.
+- Deletion behavior is explicitly defined.
+- Important historical data should be preserved where appropriate.
+- Duplicate data should be avoided.
+- Authorization rules belong primarily to the application layer.
+- Indexes should reflect real query patterns.
+- Soft deletion is preferred for important business entities.
+
+---
+
+# Implementation Strategy
+
+Database implementation follows the documented entity specifications and actual sprint dependencies.
+
+The existing Project implementation from Sprint 2 remains stable.
+
+Sprint 3 introduces:
+
+1. Workspace
+2. Workspace Member
+3. Invitation
+4. Workspace permissions
+5. Project/Workspace integration
+
+Communication follows:
+
+6. Channel
+7. Message
+
+Community follows:
+
+8. Community Post
+9. Comment
+10. Like
+11. Bookmark
+
+Platform follows:
+
+12. Notification
+
+AI follows:
+
+13. AI Conversation
+14. AI Message
+
+This order may be refined only when implementation reveals a genuine dependency.
+
+---
+
+# Architecture Principle
+
+The Workspace is the organizational boundary of XEEO.
+
+The intended V1 hierarchy is:
+
+```text
+User
+  │
+  └── Workspace
+        ├── Members
+        ├── Channels
+        │     └── Messages
+        └── Projects
+              └── Project Members
+```
+
+This relationship is foundational for permissions, collaboration, communication, and future platform expansion.
 
 ---
 
 # Future Expansion
 
-The architecture should support future features without major restructuring, including:
+The architecture should support future capabilities without requiring major restructuring:
 
-* Live collaborative code editing
-* Voice and video communication
-* Shared terminals
-* Documentation
-* Task boards
-* Git integration
-* Plugin ecosystem
-* Enterprise organizations
-* Mobile applications
-
----
-
-# Next Step
-
-The next document is **11-Entity Design.md**.
-
-Each entity will be designed individually, including:
-
-* Fields
-* Data types
-* Constraints
-* Relationships
-* Indexes
-* Validation rules
-* Business rules
-
-After completing all entity designs, the database can be implemented directly using PostgreSQL and Prisma with minimal redesign.
+- Tasks
+- Documentation
+- Code reviews
+- Git integration
+- Live collaborative editing
+- Voice/video
+- Screen sharing
+- Shared terminals
+- Advanced AI
+- Plugins
+- Mobile
+- Enterprise capabilities

@@ -2,15 +2,21 @@
 
 ## Version
 
-v1.0
+v2.0
 
 ---
 
 # 1. Executive Summary
 
-XEEO is an all-in-one collaborative platform designed for software developers. It combines communication, project management, real-time collaboration, AI assistance, and community engagement into a single workspace.
+XEEO is a collaborative platform for software development.
 
-The first release (MVP) focuses on helping small developer teams collaborate effectively while providing a foundation for future expansion.
+It brings developer identity, team workspaces, communication, software projects, community interaction, and AI assistance into one connected platform.
+
+XEEO is designed to reduce the need for developers and teams to constantly switch between separate tools while building software.
+
+The first major release focuses on establishing a strong backend foundation for collaborative software development.
+
+Frontend development will begin only after the V1 backend has been implemented, integrated, tested, hardened, and prepared for release.
 
 ---
 
@@ -22,303 +28,515 @@ The first release (MVP) focuses on helping small developer teams collaborate eff
 
 ## Tagline
 
-**Build Together.**
+**Build Together. Grow Together.**
 
 ## Product Type
 
-Web-based collaborative software development platform.
+Collaborative software development platform.
 
 ---
 
-# 3. Problem Statement
+# 3. Product Vision
+
+XEEO aims to become a collaborative operating system for software development.
+
+The platform should connect:
+
+- Developer identity
+- Team collaboration
+- Communication
+- Projects
+- Community
+- AI assistance
+
+into one connected experience.
+
+XEEO is not intended to be another standalone chat application.
+
+Communication exists to support software development.
+
+Projects exist to give development work a central place.
+
+Community exists to allow developers to share and learn.
+
+AI exists to assist developers without replacing them.
+
+---
+
+# 4. Problem Statement
 
 Developers currently rely on multiple disconnected tools to complete a single project.
 
-Typical workflow:
+A typical workflow may involve:
 
-* Team communication
-* Project management
-* Documentation
-* Source control
-* Code review
-* Community discussions
-* AI assistance
+- Team communication
+- Project management
+- Source control
+- Documentation
+- Code review
+- Community discussions
+- AI assistance
 
-Constant context switching reduces productivity and creates unnecessary complexity.
+Constant context switching creates unnecessary complexity and can reduce productivity.
 
----
-
-# 4. Proposed Solution
-
-XEEO provides a unified workspace where software teams can:
-
-* Communicate
-* Organize projects
-* Collaborate in real time
-* Manage development tasks
-* Receive AI assistance
-* Share projects with the community
-* Learn from other developers
+XEEO aims to reduce this fragmentation by bringing the core collaborative development experience into one platform.
 
 ---
 
-# 5. Product Goals
+# 5. Proposed Solution
+
+XEEO provides a unified platform where developers can:
+
+- Establish their developer identity
+- Create or join workspaces
+- Collaborate with teams
+- Communicate through organized channels
+- Create and manage software projects
+- Share projects publicly
+- Discover projects created by other developers
+- Interact with the developer community
+- Use a basic AI assistant
+
+Advanced development capabilities will be added after the first major release.
+
+---
+
+# 6. Product Goals
 
 ## Primary Goals
 
-* Simplify developer collaboration.
-* Reduce tool switching.
-* Improve team productivity.
-* Encourage community learning.
-* Build a scalable platform for future growth.
+- Simplify developer collaboration.
+- Reduce unnecessary tool switching.
+- Provide a strong workspace-based collaboration model.
+- Make software projects central to collaboration.
+- Enable developers to share and discover projects.
+- Provide useful basic AI assistance.
+- Build a scalable technical foundation for future capabilities.
 
 ## Business Goals
 
-* Acquire early users from colleges and hackathons.
-* Validate the product with real teams.
-* Grow through community participation.
-
----
-
-# 6. Non-Goals (MVP)
-
-The first version will **not** include:
-
-* Mobile applications
-* Video conferencing
-* Screen sharing
-* CI/CD pipelines
-* Plugin marketplace
-* Enterprise administration
-* Billing and subscriptions
-
-These features may be considered after validating the MVP.
+- Acquire early users from colleges, hackathons, and startup teams.
+- Validate the product with real development teams.
+- Build a developer community around projects and collaboration.
+- Establish a foundation for future product expansion.
 
 ---
 
 # 7. Target Users
 
-## Primary
+## Primary Users
 
-* Computer Science students
-* College project teams
-* Hackathon participants
-* Startup teams
-* Open-source contributors
+1. College students
+2. Hackathon teams
+3. Startup teams
 
-## Secondary
+These users should guide V1 product decisions.
 
-* Freelance developers
-* Coding communities
-* Technical clubs
-* Educators
+## Secondary Users
 
----
+- Open-source contributors
+- Freelance developers
+- Coding communities
+- Technical clubs
+- Software teams
 
-# 8. User Personas
-
-### Student
-
-Needs a simple platform for assignments, hackathons, and college projects.
-
-### Startup Founder
-
-Needs one workspace to manage a small engineering team.
-
-### Open Source Contributor
-
-Needs collaboration, reviews, and community engagement.
+Broader organizational and enterprise use will be considered after validating the core product.
 
 ---
 
-# 9. User Stories
+# 8. Core Product Pillars
 
-As a developer, I want to create a workspace so my team can collaborate.
+XEEO V1 is organized around six core pillars.
 
-As a team owner, I want to invite members with different roles.
+## 8.1 Identity
 
-As a developer, I want organized channels for discussions.
+Users should be able to:
 
-As a developer, I want to create and manage projects.
-
-As a team member, I want AI assistance while working.
-
-As a community member, I want to publish projects and receive feedback.
-
----
-
-# 10. Functional Requirements
-
-## Authentication
-
-* Email registration
-* Login
-* Password reset
-* Google sign-in
-* GitHub sign-in
+- Create accounts
+- Authenticate securely
+- Maintain developer profiles
+- Follow other developers
+- Manage account information
 
 ---
 
-## Workspaces
+## 8.2 Workspaces
 
-* Create workspace
-* Join workspace
-* Invite members
-* Manage roles
+Workspaces are the primary organizational boundary for team collaboration.
 
----
+Users should be able to:
 
-## Channels
-
-* Text channels
-* Organized discussions
-* Search messages
-
----
-
-## Projects
-
-* Create project
-* Add members
-* Project overview
-* Status tracking
+- Create workspaces
+- Own workspaces
+- Join workspaces
+- Manage workspace members
+- Assign roles
+- Manage permissions
+- Invite members
+- Configure workspace information
 
 ---
 
-## Community
+## 8.3 Communication
 
-* Publish projects
-* Like
-* Comment
-* Follow creators
-* Bookmark posts
+Workspace communication should be organized around channels.
+
+V1 communication includes:
+
+- Text channels
+- Default workspace channels
+- Custom channels
+- Sending messages
+- Editing messages
+- Deleting messages
+- Message history
+- Pagination
+- Real-time message delivery
+- Basic notification events
+- Notification center
+
+Direct messaging is not part of V1.
 
 ---
 
-## AI Assistant
+## 8.4 Projects
 
-* Explain code
-* Generate documentation
-* Suggest improvements
-* Answer development questions
+Projects are the central software-development unit inside XEEO.
+
+V1 projects include:
+
+- Project creation
+- Project editing
+- Project archiving
+- Project visibility
+- Project metadata
+- Project members
+- Project roles
+- Project discovery foundation
+- Project stars
+- Project unstars
+
+Projects will be integrated into Workspaces after the Workspace foundation has been completed.
+
+This integration is a dedicated implementation phase and is not treated as part of the initial Workspace entity implementation.
 
 ---
+
+## 8.5 Community
+
+The V1 community allows developers to publicly share and discover projects.
+
+V1 community capabilities include:
+
+- Publish projects publicly
+- Unpublish projects
+- Public project pages
+- Project discovery
+- Basic project search
+- Comments
+- Likes
+- Bookmarks / saves
+- Creator follows
+- Project sharing
+
+Advanced recommendation and ranking systems are deferred.
+
+Project Stars and Community Likes are separate concepts.
+
+---
+
+## 8.6 Basic AI
+
+V1 AI is a general-purpose conversational assistant.
+
+V1 AI includes:
+
+- AI chat
+- Conversation history
+- Basic conversation context
+- Technical questions
+- Code explanation when code is provided
+- Basic writing/documentation assistance
+
+The AI architecture must remain provider-agnostic.
+
+The initial provider may be OpenAI, but XEEO must not be tightly coupled to one provider.
+
+Advanced relational and project-aware AI is deferred to later versions.
+
+---
+
+# 9. Platform Services
+
+Platform-level backend capabilities required by V1 include:
 
 ## Notifications
 
-* Mentions
-* Invitations
-* Project updates
-* Community interactions
+- Notification records
+- Notification center
+- Unread state
+- Mark as read
+- Mark all as read
+- Relevant workspace, project, communication, and community events
+
+## Search
+
+V1 search focuses on:
+
+- Users
+- Projects
+- Basic project discovery
+
+More advanced search will be introduced later.
+
+## Dashboard Data
+
+The backend should eventually provide aggregated data required for the V1 dashboard, including:
+
+- Relevant workspaces
+- Relevant projects
+- Recent activity
+- Notifications
+- Community activity
+
+The dashboard is an aggregation layer and should not duplicate domain data unnecessarily.
+
+## Account and Preferences
+
+V1 backend support includes:
+
+- Account information
+- Profile information
+- Security/account operations
+- Notification preferences
+- Basic privacy and visibility preferences
 
 ---
 
-# 11. Non-Functional Requirements
+# 10. V1 Scope
 
-* Fast page loading
-* Responsive interface
-* Secure authentication
-* Reliable real-time communication
-* Scalable architecture
-* Clean user experience
+V1 consists of:
 
----
+### Identity
 
-# 12. MVP Scope
+- Authentication
+- Profiles
+- Developer identity
+- Follow system
 
-Included in Version 1:
+### Collaboration
 
-* User accounts
-* Workspaces
-* Channels
-* Real-time chat
-* Projects
-* Community feed
-* User profiles
-* Basic AI assistant
+- Workspaces
+- Workspace members
+- Roles
+- Permissions
+- Invitations
 
----
+### Communication
 
-# 13. Future Scope
+- Channels
+- Messages
+- Real-time messaging
+- Notifications
 
-* Live collaborative code editor
-* Voice and video calls
-* Screen sharing
-* Shared terminal
-* Kanban boards
-* Built-in Git integration
-* AI code review
-* AI project planning
-* Deployment integrations
-* Mobile applications
-* Plugin ecosystem
+### Projects
 
----
+- Project management
+- Project members
+- Project/workspace integration
+- Project discovery foundation
+- Stars / unstars
 
-# 14. Success Metrics
+### Community
 
-Product metrics:
+- Public project publishing
+- Discovery
+- Basic search
+- Comments
+- Likes
+- Bookmarks
+- Creator follows
+- Sharing
 
-* Registered users
-* Active workspaces
-* Projects created
-* Daily active users
-* Community posts
-* User retention
+### AI
 
-Technical metrics:
+- Basic conversational AI
 
-* Page load time
-* API response time
-* Real-time message latency
-* System uptime
+### Platform
+
+- Dashboard data
+- Search
+- Notifications
+- Account/preferences
 
 ---
 
-# 15. Risks
+# 11. V1 Backend Completion
 
-* Scope becoming too large
-* Strong competition
-* High infrastructure costs
-* Real-time synchronization complexity
-* User adoption challenges
+The V1 backend is not considered complete when the feature APIs merely exist.
+
+Before frontend development begins, the backend must be:
+
+- Implemented
+- Integrated
+- Validated
+- Authorized
+- Tested
+- Secured
+- Documented
+- Hardened
+- Deployment-ready
+
+Backend completion includes:
+
+- Cross-module integration
+- Validation
+- Authorization
+- Error handling
+- Database integrity
+- Transaction review
+- Index review
+- Rate limiting
+- Logging
+- Security review
+- API testing
+- Integration testing
+- Production configuration
+
+Only after this milestone will frontend V1 development begin.
 
 ---
 
-# 16. Assumptions
+# 12. Explicitly Deferred
 
-* Developers want fewer tools.
-* Students and startups are willing to try new collaboration platforms.
-* AI assistance increases productivity.
-* Community engagement improves retention.
+The following are valuable XEEO capabilities but are intentionally outside the current V1 implementation.
+
+## Advanced Development
+
+- Task management
+- Project documentation
+- Code reviews
+- Git/GitHub/GitLab integration
+- Advanced project management
+- Deployment integrations
+
+## Advanced Communication
+
+- Direct messages
+- Group DMs
+- Audio calls
+- Video calls
+- Screen sharing
+- Voice channels
+- Advanced real-time collaboration
+
+## Advanced AI
+
+- Relational AI
+- Project-wide AI reasoning
+- Codebase-aware AI
+- AI code review
+- AI project planning
+- AI agents
+- Multi-agent workflows
+
+## Advanced Community
+
+- Recommendation engine
+- Advanced trending algorithms
+- Advanced ranking
+- Community analytics
+- Advanced moderation
+
+## Other Future Capabilities
+
+- Live collaborative code editor
+- Shared terminal
+- Plugin ecosystem
+- Mobile applications
+- Enterprise capabilities
 
 ---
 
-# 17. Open Questions
+# 13. V2 Direction
 
-* Should repositories be hosted inside XEEO or linked from Git providers?
-* How should AI usage limits work?
-* What should the permission model look like?
-* What is the best onboarding experience for new teams?
+V2 will expand XEEO beyond the core collaborative foundation.
+
+Major directions include:
+
+- Direct messaging
+- Group conversations
+- Audio/video collaboration
+- Screen sharing
+- Advanced project engagement
+- Project forks
+- Engagement counts
+- Advanced development workflows
+- Deeper AI capabilities
+
+The exact V2 implementation order will be determined after V1 validation.
 
 ---
 
-# MVP Definition
+# 14. Success Criteria
 
-A successful MVP allows a team to:
+A successful V1 should allow a small team to:
 
 1. Create an account.
 2. Create a workspace.
 3. Invite teammates.
-4. Organize discussions.
-5. Create projects.
-6. Share progress with the community.
-7. Receive AI assistance.
+4. Manage workspace membership.
+5. Communicate through channels.
+6. Send and receive real-time messages.
+7. Create and manage projects.
+8. Collaborate around projects.
+9. Publish projects publicly.
+10. Discover and interact with other projects.
+11. Receive notifications.
+12. Use the basic AI assistant.
 
-If a small team can complete an entire project using XEEO as their primary workspace, the MVP has achieved its objective.
+The primary product test remains:
+
+> Can a small team use XEEO as its primary collaborative workspace while building a software project?
+
+If the answer is yes, the core V1 objective has been achieved.
 
 ---
 
-# Product Vision Reminder
+# 15. Product Principles
 
-**Build Together. Ship Faster. Grow Together.**
+XEEO development follows these principles:
+
+- Build first, chat second.
+- Collaboration by default.
+- AI assists developers.
+- One connected workspace.
+- Simplicity wins.
+- Performance is a feature.
+- Community creates value.
+- Design for future scalability.
+
+---
+
+# 16. Development Approach
+
+XEEO is developed incrementally.
+
+The development process is:
+
+```text
+Understand
+    ↓
+Design
+    ↓
+Implement
+    ↓
+Test
+    ↓
+Verify
+    ↓
+Commit
+    ↓
+Push
+    ↓
+Document milestone
