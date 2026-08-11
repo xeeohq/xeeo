@@ -2,543 +2,744 @@
 
 ## Version
 
-v1.0
+v2.0
 
 ---
 
 # Purpose
 
-This document defines every major feature of XEEO, its purpose, functionality, and whether it belongs in the MVP or a future release.
+This document defines the major capabilities of XEEO and establishes whether each capability belongs to the current V1 backend scope or a future release.
+
+The document is used as a product-level reference.
+
+Detailed implementation planning belongs in the roadmap and technical design documents.
 
 ---
 
-# Feature Categories
+# 1. Authentication
 
-## 1. Authentication
+## Description
 
-### Description
+Allows developers to securely create accounts and access XEEO.
 
-Allows users to securely create accounts and access XEEO.
+## V1
 
-### Features
+- User registration
+- Login
+- Logout
+- Password management
+- JWT authentication
+- Validation
+- Authorization
 
-* Email registration
-* Email verification
-* Login
-* Logout
-* Forgot password
-* Password reset
-* Google Sign-In
-* GitHub Sign-In
-* Session management
+## Future
 
-### Priority
-
-**MVP**
+- Google OAuth
+- GitHub OAuth
+- Passkeys
+- Two-factor authentication
+- Advanced session management
 
 ---
 
-# 2. User Profiles
+# 2. Developer Profiles
 
-### Description
+## Description
 
-Every user has a public profile representing their developer identity.
+Every user has a developer identity.
 
-### Features
+## V1
 
-* Profile photo
-* Name
-* Username
-* Bio
-* Skills
-* Social links
-* GitHub link
-* Portfolio link
-* Contribution history
-* Public projects
-* Followers & following
-
-### Priority
-
-**MVP**
+- Username
+- Display name
+- Bio
+- Profile image
+- Banner
+- Location
+- Website
+- Portfolio
+- GitHub
+- LinkedIn
+- Twitter
+- Experience level
+- Availability
+- Skills
+- Public profile
+- Followers
+- Following
 
 ---
 
 # 3. Workspaces
 
-### Description
+## Description
 
-A workspace is the primary collaboration environment for a team.
+A workspace is the primary organizational environment for a development team.
 
-### Features
+## V1
 
-* Create workspace
-* Edit workspace
-* Delete workspace
-* Invite members
-* Join through invite
-* Workspace icon
-* Workspace description
-* Workspace settings
-* Workspace activity
+- Create workspace
+- View workspace
+- Update workspace
+- Archive workspace
+- Workspace ownership
+- Workspace visibility
+- Workspace metadata
+- Workspace members
+- Workspace roles
+- Workspace permissions
+- Invitations
 
-### Roles
+## Roles
 
-* Owner
-* Admin
-* Moderator
-* Member
-* Guest
+- OWNER
+- ADMIN
+- MODERATOR
+- MEMBER
+- GUEST
 
-### Priority
+## Future
 
-**MVP**
+- Advanced workspace analytics
+- Enterprise administration
+- Billing
+- Organization hierarchy
 
 ---
 
 # 4. Channels
 
-### Description
+## Description
 
 Channels organize communication inside a workspace.
 
-### Types
+## V1
 
-* General
-* Development
-* Design
-* Backend
-* Frontend
-* Testing
-* Announcements
-* Random
+- General channel
+- Announcements channel
+- Custom text channels
+- Create channel
+- Rename channel
+- Archive channel
+- View channel
+- Channel permissions
+- Message history
 
-### Features
+## V1 Channel Types
 
-* Create channel
-* Rename channel
-* Archive channel
-* Pin messages
-* Search messages
-* Mentions
-* Emoji reactions
-* File sharing
+- TEXT
+- ANNOUNCEMENT
 
-### Priority
+## Future
 
-**MVP**
+- Voice channels
+- Advanced channel types
+- Advanced moderation
 
 ---
 
-# 5. Direct Messages
+# 5. Messages
 
-### Description
+## Description
 
-Private conversations between users.
+Messages provide communication inside workspace channels.
 
-### Features
+## V1
 
-* One-to-one chat
-* Group conversations
-* File sharing
-* Message search
-* Typing indicators
-* Read receipts
+- Send message
+- Edit message
+- Delete message
+- Read messages
+- Message history
+- Pagination
+- Message timestamps
+- Message authorship
+- Authorization
+- Real-time delivery
 
-### Priority
+## Future
 
-**Future Release**
-
----
-
-# 6. Projects
-
-### Description
-
-Projects are the center of software development inside XEEO.
-
-### Features
-
-* Create project
-* Edit project
-* Archive project
-* Invite members
-* Project description
-* Project logo
-* Project visibility
-* Status tracking
-* Progress tracking
-
-### Project Status
-
-* Planning
-* In Progress
-* Testing
-* Completed
-* Archived
-
-### Priority
-
-**MVP**
+- Direct messages
+- Group DMs
+- Threads
+- Advanced reactions
+- Voice messages
+- Advanced attachments
 
 ---
 
-# 7. Tasks
+# 6. Direct Messages
 
-### Description
+## Priority
 
-Task management for projects.
+**V2**
 
-### Features
+Direct messaging is intentionally excluded from V1.
 
-* Create tasks
-* Assign members
-* Due dates
-* Priority levels
-* Status updates
-* Labels
-* Comments
+Future capabilities:
 
-### Priority
-
-**Future Release**
+- One-to-one conversations
+- Group conversations
+- Message search
+- Typing indicators
+- Read receipts
+- File sharing
 
 ---
 
-# 8. Community
+# 7. Projects
 
-### Description
+## Description
 
-A public space where developers share projects and learn from each other.
+Projects are the central software-development units inside XEEO.
 
-### Features
+## V1
 
-* Publish project
-* Like
-* Comment
-* Bookmark
-* Follow creator
-* Share
-* Trending feed
-* New projects feed
-* Search
+- Create project
+- View project
+- Update project
+- Archive project
+- Project description
+- Project visibility
+- README
+- License
+- Repository URL
+- Documentation URL
+- Live URL
+- Project members
+- Project roles
+- Project discovery foundation
+- Stars
+- Unstars
 
-### Priority
+## Project Status
 
-**MVP**
+- Planning
+- In Progress
+- Testing
+- Completed
+- Archived
 
----
+## Workspace Integration
 
-# 9. Reviews
+Projects will belong to Workspaces in the final V1 architecture.
 
-### Description
+The Workspace → Project integration is implemented as a dedicated phase after the Workspace foundation is completed.
 
-Community members review projects.
+## V2
 
-### Features
-
-* Technical feedback
-* UI feedback
-* Bug reports
-* Feature suggestions
-* Rating system
-
-### Priority
-
-**MVP**
-
----
-
-# 10. AI Assistant
-
-### Description
-
-Integrated AI throughout the platform.
-
-### Features
-
-* Explain code
-* Generate documentation
-* Fix bugs
-* Review code
-* Generate README
-* Suggest improvements
-* Summarize discussions
-* Answer technical questions
-
-### Priority
-
-**MVP**
+- Forks
+- Engagement counts
+- Advanced project management
+- Advanced project analytics
 
 ---
 
-# 11. Notifications
+# 8. Tasks
 
-### Features
+## Priority
 
-* Mentions
-* Project updates
-* Workspace invitations
-* Comments
-* AI completion alerts
-* Community interactions
+**Post-V1**
 
-### Priority
+Tasks are intentionally excluded from the current version.
 
-**MVP**
+Future capabilities:
 
----
-
-# 12. Search
-
-### Search Targets
-
-* Users
-* Projects
-* Workspaces
-* Channels
-* Messages
-* Community posts
-
-### Priority
-
-**MVP**
+- Create tasks
+- Assign members
+- Due dates
+- Priorities
+- Status
+- Labels
+- Comments
+- Boards
 
 ---
 
-# 13. File Management
+# 9. Community
 
-### Features
+## Description
 
-* Upload files
-* Download files
-* Preview images
-* Preview PDFs
-* Organize project assets
+A public environment where developers share and discover software projects.
 
-### Priority
+## V1
 
-**Future Release**
+### Publishing
 
----
+- Publish project publicly
+- Unpublish project
+- Public project page
 
-# 14. Live Code Editor
+### Discovery
 
-### Description
+- Project listing
+- New projects
+- Basic project search
 
-Multiple developers edit code simultaneously.
+### Interaction
 
-### Features
+- Comments
+- Likes
+- Bookmarks / saves
+- Creator follows
+- Sharing
 
-* Multiple cursors
-* Live synchronization
-* Syntax highlighting
-* Auto-save
-* Cursor presence
-* Conflict handling
+## Explicitly Deferred
 
-### Priority
-
-**Future Release**
-
----
-
-# 15. Voice & Video
-
-### Features
-
-* Voice rooms
-* Video meetings
-* Screen sharing
-* Recording
-
-### Priority
-
-**Future Release**
+- Advanced trending
+- Recommendation algorithms
+- Advanced ranking
+- Community analytics
+- Advanced moderation
 
 ---
 
-# 16. Shared Terminal
+# 10. Project Reviews
 
-### Features
+## Priority
 
-* Shared terminal session
-* Command history
-* Permission controls
+**Post-V1**
 
-### Priority
+Project review systems are intentionally deferred from the current version.
 
-**Future Release**
+Future capabilities may include:
+
+- Technical feedback
+- UI feedback
+- Bug reports
+- Feature suggestions
+- Rating systems
+- Structured project reviews
+
+This should not be confused with Community comments or Project Stars.
+
+---
+
+# 11. AI Assistant
+
+## Description
+
+A general-purpose conversational AI assistant.
+
+## V1
+
+- AI chat
+- Conversation history
+- Basic conversational context
+- Technical questions
+- Code explanation when code is provided
+- Writing assistance
+- Documentation assistance
+
+## Provider Architecture
+
+XEEO uses a provider abstraction layer.
+
+Initial provider:
+
+- OpenAI
+
+Future providers may include:
+
+- Anthropic
+- Google Gemini
+- Local models
+
+AI features must not be tightly coupled to a single provider.
+
+## Explicitly Deferred
+
+- Relational AI
+- Project-wide reasoning
+- Codebase-aware AI
+- AI code review
+- AI project planning
+- AI agents
+- Multi-agent systems
+
+---
+
+# 12. Notifications
+
+## Description
+
+Provides a centralized notification system.
+
+## V1
+
+- Notification records
+- Notification center
+- Unread state
+- Unread count
+- Mark as read
+- Mark all as read
+- Workspace invitation notifications
+- Mention notifications
+- Project activity notifications
+- Community interaction notifications
+- Relevant system notifications
+
+The event set should remain intentionally limited during V1.
+
+---
+
+# 13. Search
+
+## Description
+
+Provides basic discovery across XEEO.
+
+## V1
+
+### Users
+
+- Username
+- Developer identity
+
+### Projects
+
+- Project name
+- Slug
+- Description
+- Basic metadata
+
+### Community
+
+- Public project discovery
+
+## Future
+
+- Message search
+- Workspace search
+- Advanced filters
+- Tags
+- Tech-stack search
+- Semantic search
+- Advanced ranking
+
+---
+
+# 14. Dashboard
+
+## Description
+
+Provides the user with an overview of their XEEO activity.
+
+## V1 Backend Requirements
+
+The backend should provide data for:
+
+- Relevant workspaces
+- Recent projects
+- Recent activity
+- Notifications
+- Community activity
+
+The dashboard should aggregate existing domain data rather than duplicate it.
+
+## Future
+
+- Advanced recommendations
+- Advanced analytics
+- Personalized ranking
+- AI-driven dashboard intelligence
+
+---
+
+# 15. Account & Preferences
+
+## V1
+
+- Account information
+- Profile information
+- Password/security operations
+- Notification preferences
+- Basic privacy settings
+- Visibility preferences
+
+## Future
+
+- Advanced personalization
+- Enterprise account management
+
+---
+
+# 16. File Management
+
+## Priority
+
+**Post-V1**
+
+Future capabilities:
+
+- Upload files
+- Download files
+- Preview images
+- Preview documents
+- Project assets
+- Message attachments
 
 ---
 
 # 17. Documentation
 
-### Features
+## Priority
 
-* Project wiki
-* Team notes
-* Technical documentation
-* Markdown support
+**Post-V1**
 
-### Priority
+Future capabilities:
 
-**Future Release**
-
----
-
-# 18. Git Integration
-
-### Features
-
-* Connect Git repositories
-* Commit history
-* Branch overview
-* Pull request overview
-* Issue synchronization
-
-### Priority
-
-**Future Release**
+- Project wiki
+- Team notes
+- Technical documentation
+- Markdown documentation
+- Knowledge organization
 
 ---
 
-# 19. Dashboard
+# 18. Code Reviews
 
-### Description
+## Priority
 
-The dashboard is the first screen users see after signing in.
+**Post-V1**
 
-### Sections
+Future capabilities:
 
-* Continue Working
-* Recent Projects
-* Recent Activity
-* Assigned Work
-* Community Feed
-* Notifications
-* AI Suggestions
-
-### Priority
-
-**MVP**
+- Code review
+- Review comments
+- Review status
+- Approval workflows
+- Code feedback
+- AI-assisted reviews
 
 ---
 
-# 20. Admin Panel
+# 19. Git Integration
 
-### Features
+## Priority
 
-* Manage users
-* Manage workspaces
-* Moderate community posts
-* Review reports
-* Platform analytics
+**Post-V1**
 
-### Priority
+Future capabilities:
 
-**Future Release**
-
----
-
-# MVP Features
-
-The first public version of XEEO will include:
-
-* User authentication
-* User profiles
-* Workspaces
-* Channels
-* Real-time messaging
-* Projects
-* Community feed
-* Project reviews
-* Dashboard
-* Search
-* AI assistant
-* Notifications
+- Git repository connection
+- Commit history
+- Branch information
+- Pull request information
+- Issue synchronization
 
 ---
 
-# Future Roadmap
+# 20. Live Collaborative Code Editor
 
-Version 2
+## Priority
 
-* Live collaborative code editor
-* Task boards
-* Direct messaging
-* Documentation
+**Future**
 
-Version 3
+Future capabilities:
 
-* Voice & video
-* Shared terminal
-* Git integration
-* Deployment integrations
-
-Version 4
-
-* AI code review
-* AI project planning
-* Plugin marketplace
-* Mobile applications
+- Multiple cursors
+- Live synchronization
+- Syntax highlighting
+- Auto-save
+- Cursor presence
+- Conflict handling
 
 ---
 
-# Feature Prioritization
+# 21. Voice, Video & Screen Sharing
 
-## Must Have
+## Priority
 
-Features required for the MVP.
+**V2 / Future**
 
-* Authentication
-* Dashboard
-* Workspaces
-* Channels
-* Messaging
-* Projects
-* Community
-* AI Assistant
+Future capabilities:
 
-## Should Have
-
-Important after launch.
-
-* Tasks
-* Documentation
-* Git integration
-* Direct messages
-
-## Could Have
-
-Long-term enhancements.
-
-* Live coding
-* Voice
-* Video
-* Shared terminal
-* Mobile apps
-
-## Won't Have (MVP)
-
-* Enterprise billing
-* Organization-wide administration
-* Marketplace
-* Browser IDE
-* CI/CD platform
-
-These are intentionally excluded from the initial release.
+- Audio calls
+- Video calls
+- Voice rooms
+- Screen sharing
+- Recording
 
 ---
 
-# Product Principle
+# 22. Shared Terminal
 
-Every new feature must answer **yes** to at least one of these questions:
+## Priority
 
-* Does it help developers build software faster?
-* Does it improve collaboration?
-* Does it reduce context switching?
-* Does it make the product easier to use?
-* Does it provide clear value to users?
+**Future**
 
-If the answer is **no**, the feature should not be added to the roadmap.
+Future capabilities:
+
+- Shared terminal
+- Command history
+- Permission controls
+- Collaborative sessions
+
+---
+
+# 23. Deployment
+
+## Priority
+
+**Future**
+
+Future capabilities:
+
+- Deployment integrations
+- Environment management
+- Deployment status
+- Logs
+
+---
+
+# 24. Plugin Ecosystem
+
+## Priority
+
+**Future**
+
+Future capabilities:
+
+- Plugins
+- Integrations
+- Extensions
+- Developer ecosystem
+
+---
+
+# 25. Mobile Applications
+
+## Priority
+
+**Future**
+
+Mobile applications will be considered after the core web platform has been validated.
+
+---
+
+# 26. Enterprise Capabilities
+
+## Priority
+
+**Future**
+
+Potential capabilities:
+
+- Enterprise workspaces
+- Organization administration
+- Advanced permissions
+- Billing
+- Compliance
+- Enterprise analytics
+
+---
+
+# 27. V1 Feature Summary
+
+## Included
+
+### Identity
+
+- Authentication
+- Developer profiles
+- Follow system
+
+### Collaboration
+
+- Workspaces
+- Workspace members
+- Roles
+- Permissions
+- Invitations
+
+### Communication
+
+- Channels
+- Messages
+- Real-time delivery
+- Notifications
+
+### Projects
+
+- Project management
+- Project members
+- Workspace integration
+- Stars / unstars
+- Discovery foundation
+
+### Community
+
+- Public project publishing
+- Discovery
+- Search
+- Comments
+- Likes
+- Bookmarks
+- Creator follows
+- Sharing
+
+### AI
+
+- Basic conversational assistant
+
+### Platform
+
+- Dashboard data
+- Account/preferences
+- Basic search
+- Notification center
+
+---
+
+# 28. Post-V1
+
+- Tasks
+- Documentation
+- Code Reviews
+- Git integration
+- Advanced project management
+- Advanced community systems
+
+---
+
+# 29. V2
+
+- Direct messages
+- Group DMs
+- Audio
+- Video
+- Screen sharing
+- Project forks
+- Engagement counts
+- Advanced collaboration
+- Deeper AI capabilities
+
+---
+
+# 30. V2+
+
+- Relational AI
+- Project-aware AI
+- Codebase-aware AI
+- AI agents
+- Live collaborative development
+- Shared terminal
+- Deployment
+- Plugins
+- Mobile
+- Enterprise capabilities
+
+---
+
+# Product Decision Rule
+
+Every feature should answer at least one of these questions:
+
+- Does it help developers build software faster?
+- Does it improve collaboration?
+- Does it reduce context switching?
+- Does it make XEEO easier to use?
+- Does it provide clear user value?
+
+If the answer is unclear, the feature should be postponed or rejected.
