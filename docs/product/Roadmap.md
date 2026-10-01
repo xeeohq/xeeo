@@ -86,7 +86,7 @@ The V1 backend must be complete, integrated, tested, hardened, and release-ready
 Sprint 0  ████████████████████  Complete
 Sprint 1  ████████████████████  Complete
 Sprint 2  ████████████████████  Complete
-Sprint 3  ████░░░░░░░░░░░░░░░░  Next
+Sprint 3  █████░░░░░░░░░░░░░░░  In Progress
 Sprint 4  ░░░░░░░░░░░░░░░░░░░░  Pending
 Sprint 5  ░░░░░░░░░░░░░░░░░░░░  Pending
 Sprint 6  ░░░░░░░░░░░░░░░░░░░░  Pending
@@ -326,7 +326,7 @@ This will be implemented during Sprint 3 Project Integration.
 
 ## Status
 
-🟡 Next
+🟡 In Progress
 
 ## Goal
 
@@ -336,9 +336,18 @@ Build the workspace organizational layer and integrate it with the existing proj
 
 ## Phase 1 — Workspaces
 
+### Status
+
+🟡 In Progress
+
+### Goal
+
+Establish the Workspace foundation, lifecycle, ownership model, and APIs required for workspace-based collaboration.
+
 ### Scope
 
 - Workspace entity
+- Workspace database schema
 - Workspace creation
 - Workspace retrieval
 - Workspace update
@@ -348,6 +357,77 @@ Build the workspace organizational layer and integrate it with the existing proj
 - Workspace visibility
 - Workspace metadata
 - Workspace archive/soft-delete behavior
+
+### Completed
+
+#### Workspace Database Foundation
+
+- Workspace entity
+- Workspace owner relationship
+- Workspace name
+- Workspace description
+- Unique workspace slug
+- Workspace visibility
+- Workspace subscription plan
+- Workspace logo URL
+- Workspace banner URL
+- Workspace archive flag
+- Workspace soft-delete timestamp
+- Workspace creation timestamp
+- Workspace update timestamp
+
+#### Workspace Enums
+
+`WorkspaceVisibility`
+
+- PRIVATE
+- PUBLIC
+
+`WorkspacePlan`
+
+- FREE
+- PRO
+- TEAM
+- ENTERPRISE
+
+#### Database Implementation
+
+- Prisma Workspace model
+- Workspace owner relation to User
+- Workspace migration
+- Workspace indexes
+- Unique slug constraint
+- Database migration successfully applied
+- Prisma schema validation
+- Database schema verification
+
+### Remaining
+
+#### Workspace Operations
+
+- Workspace creation API
+- Workspace retrieval API
+- Workspace update API
+- Workspace ownership operations
+- Workspace lifecycle operations
+- Workspace archive behavior
+- Workspace soft-delete behavior
+- Workspace access rules
+
+### Phase Completion Criteria
+
+Phase 1 will be considered complete when:
+
+- Workspace CRUD foundation is implemented.
+- Workspace ownership behavior is implemented.
+- Workspace slug behavior is implemented.
+- Workspace visibility behavior is implemented.
+- Workspace archive behavior is implemented.
+- Workspace soft-delete behavior is implemented.
+- Workspace APIs are validated.
+- Authorization rules are verified.
+- Negative cases are tested.
+- Documentation reflects the final implementation.
 
 ---
 
