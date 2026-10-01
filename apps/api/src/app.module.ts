@@ -11,6 +11,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { FollowModule } from './follow/follow.module';
 import { DeveloperModule } from './developer/developer.module';
 import { ProjectsModule } from './projects/projects.module';
+import { WorkspacesModule } from './workspaces/workspaces.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ProjectsModule } from './projects/projects.module';
     FollowModule,
     DeveloperModule,
     ProjectsModule,
+    WorkspacesModule,
   ],
   controllers: [],
   providers: [
