@@ -89,10 +89,9 @@ The following Workspace capabilities are defined by the product design but are n
 * Default channel creation
 * Workspace-level activity
 * Ownership transfer
-* Archive permission enforcement
-* Workspace access control
-* Workspace API operations
 * Workspace/project integration
+
+The current Workspace API foundation, owner-based authorization, archive behavior, soft-delete behavior, and basic visibility rules are implemented. More detailed membership-based access control will be introduced with the Workspace Membership phase.
 
 ---
 
@@ -381,16 +380,16 @@ isArchived
 
 which provides the database foundation for workspace archiving.
 
-### Planned behavior
+### Current behavior
 
-Archived workspaces should:
+The Workspace API currently:
 
-* Become read-only.
-* Prevent members from creating new content.
-* Preserve existing data.
-* Remain accessible according to the application's lifecycle rules.
+* Marks the workspace as archived.
+* Prevents updates to archived workspaces.
+* Prevents archiving an already archived workspace.
+* Preserves the workspace record and its data.
 
-Archive enforcement is not yet implemented.
+Detailed member-level restrictions on archived workspaces will be implemented with Workspace Membership and permission management.
 
 ---
 
@@ -404,28 +403,33 @@ deletedAt
 
 to support soft deletion.
 
-The intended application behavior is:
+### Current behavior
 
-* Mark the Workspace as deleted.
-* Preserve the underlying record temporarily.
-* Prevent normal access to deleted workspaces.
-* Avoid immediate permanent deletion.
+The Workspace API:
 
-Permanent deletion behavior is not currently implemented.
+* Marks the Workspace as deleted using `deletedAt`.
+* Preserves the underlying record.
+* Prevents normal retrieval of deleted workspaces.
+* Excludes deleted workspaces from owner workspace listings.
+* Prevents deleting an already soft-deleted workspace.
+
+Permanent deletion and restoration are not part of the current Workspace foundation.
 
 ---
 
 ## Visibility
 
-### Private
+## Private
 
-Only authorized members should be able to access private workspace content.
+Private workspaces are currently accessible through the Workspace API only to the workspace owner.
 
-### Public
+Detailed member-based authorization will be implemented with Workspace Membership.
 
-Anyone may be able to view basic workspace information.
+## Public
 
-Detailed access-control behavior will be implemented with Workspace membership and authorization.
+Public workspaces can currently be retrieved by non-owners through the Workspace API.
+
+Detailed membership and permission rules will be implemented with Workspace Membership and authorization.
 
 ---
 
@@ -475,9 +479,17 @@ isArchived
 deletedAt
 ```
 
-provide the persistence foundation for these lifecycle states.
+provide the persistence representation for these lifecycle states.
 
-Lifecycle transitions and authorization behavior will be implemented in the Workspace API layer.
+The Workspace API currently implements:
+
+* Active workspaces
+* Archiving through `isArchived`
+* Soft deletion through `deletedAt`
+* Update protection for archived workspaces
+* Retrieval exclusion for soft-deleted workspaces
+
+More detailed lifecycle permissions and member-level behavior will be implemented with Workspace Membership.
 
 ---
 
@@ -583,7 +595,7 @@ The following Workspace foundation has been implemented and verified:
 * Prisma Workspace model
 * User → Workspace ownership relation
 * Workspace metadata
-* Workspace slug
+* Workspace slug generation
 * Workspace visibility
 * Workspace subscription plan
 * Workspace archive state
@@ -592,17 +604,33 @@ The following Workspace foundation has been implemented and verified:
 * Database migration application
 * Database schema verification
 * Prisma schema validation
-
-## Remaining
-
 * Workspace creation API
 * Workspace retrieval API
 * Workspace update API
-* Workspace lifecycle operations
-* Workspace authorization
-* Ownership-transfer workflow
+* Workspace archive API
+* Workspace soft-delete API
+* Owner-only workspace update authorization
+* Owner-only workspace archive authorization
+* Owner-only workspace soft-delete authorization
+* Private workspace access protection
+* Public workspace retrieval
+* Archived workspace update protection
+* Soft-deleted workspace retrieval protection
+* DTO validation
+* Negative-case handling
+* Workspace service unit tests
+* 20 workspace service tests passing
+* TypeScript typecheck passing
+
+## Remaining
+
+* Workspace ownership transfer workflow
 * Workspace membership integration
 
-Phase 1 remains **In Progress** until the remaining Workspace operations and lifecycle behavior are implemented and verified.
+Ownership transfer is intentionally deferred until Workspace Membership is implemented, because complete ownership transfer requires membership and role management.
+
+Workspace/project integration will be handled in a later Sprint 3 phase.
+
+Phase 1 Workspace foundation is complete. Membership-based collaboration and ownership transfer remain future Sprint 3 work.
 
 ---

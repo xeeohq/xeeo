@@ -1,12 +1,16 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Param,
+    Patch,
     Post,
   } from '@nestjs/common';
+  
   import { CurrentUser } from '../auth/decorators/current-user.decorator';
   import { CreateWorkspaceDto } from './dto/create-workspace.dto';
+  import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
   import { WorkspacesService } from './workspaces.service';
   
   @Controller('workspaces')
@@ -30,8 +34,49 @@ import {
       return this.workspacesService.findAllByOwner(user.id);
     }
 
-    @Get(':slug')
-findBySlug(@Param('slug') slug: string) {
-  return this.workspacesService.findBySlug(slug);
+    @Patch(':slug')
+update(
+  @CurrentUser() user,
+  @Param('slug') slug: string,
+  @Body() updateWorkspaceDto: UpdateWorkspaceDto,
+) {
+  return this.workspacesService.update(
+    user.id,
+    slug,
+    updateWorkspaceDto,
+  );
+}
+
+@Get(':slug')
+findBySlug(
+  @CurrentUser() user,
+  @Param('slug') slug: string,
+) {
+  return this.workspacesService.findBySlug(
+    user.id,
+    slug,
+  );
+}
+
+@Patch(':slug/archive')
+archive(
+  @CurrentUser() user,
+  @Param('slug') slug: string,
+) {
+  return this.workspacesService.archive(
+    user.id,
+    slug,
+  );
+}
+
+@Delete(':slug')
+remove(
+  @CurrentUser() user,
+  @Param('slug') slug: string,
+) {
+  return this.workspacesService.remove(
+    user.id,
+    slug,
+  );
 }
   }

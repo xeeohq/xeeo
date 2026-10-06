@@ -2,7 +2,7 @@
 
 ## Status
 
-✅ Updated after Core Sprint 1
+✅ Updated after Core Sprint 3 — Workspace Foundation
 
 ---
 
@@ -192,6 +192,112 @@ Authorization: Bearer <access_token>
 
 ---
 
+
+# Workspaces
+
+The Workspace API establishes the organizational foundation for workspace-based collaboration. The current implementation covers workspace creation, retrieval, owner-controlled updates, archive lifecycle, soft deletion, and basic public/private visibility. Membership-based authorization and ownership transfer are deferred to later phases.
+
+## Create Workspace
+
+```http
+POST /workspaces
+```
+
+Authentication Required
+
+Creates a workspace owned by the authenticated user.
+
+The workspace slug is generated from the workspace name.
+
+## List Owned Workspaces
+
+```http
+GET /workspaces
+```
+
+Authentication Required
+
+Returns the authenticated user's non-deleted workspaces, ordered by creation time.
+
+## Get Workspace
+
+```http
+GET /workspaces/:slug
+```
+
+Authentication Required
+
+Returns a workspace by slug.
+
+- Public workspaces can be retrieved by authenticated non-owners.
+- Private workspaces are accessible only to the owner in the current implementation.
+- Soft-deleted workspaces are treated as not found.
+
+Membership-based access control will be introduced with Workspace Membership.
+
+## Update Workspace
+
+```http
+PATCH /workspaces/:slug
+```
+
+Authentication Required
+
+Owner Only
+
+Updates supported workspace metadata.
+
+- Only the workspace owner can update the workspace.
+- Archived workspaces cannot be updated.
+- An empty update request is rejected.
+- Soft-deleted workspaces are treated as not found.
+
+## Archive Workspace
+
+```http
+PATCH /workspaces/:slug/archive
+```
+
+Authentication Required
+
+Owner Only
+
+Archives the workspace without deleting its record.
+
+- Only the owner can archive the workspace.
+- An already archived workspace cannot be archived again.
+- Archived workspaces cannot be updated through the current API.
+
+## Delete Workspace
+
+```http
+DELETE /workspaces/:slug
+```
+
+Authentication Required
+
+Owner Only
+
+Soft-deletes the workspace by setting `deletedAt`.
+
+- The workspace record and data are preserved.
+- Soft-deleted workspaces are excluded from normal retrieval and owner listings.
+- A workspace that has already been soft-deleted cannot be deleted again.
+
+Permanent deletion and restoration are not part of the current Workspace API foundation.
+
+## Workspace API Limitations
+
+The following capabilities are intentionally deferred:
+
+- Workspace membership
+- Member roles and permissions
+- Invitations
+- Ownership transfer
+- Workspace/project authorization integration
+
+These capabilities will be implemented in the corresponding later phases of Core Sprint 3.
+
 # HTTP Status Codes
 
 | Code | Meaning |
@@ -263,9 +369,12 @@ These APIs are intentionally deferred to later sprints:
 
 ## Sprint 3
 
-- Workspaces
+- Workspace foundation — implemented
+- Workspace Membership
+- Member roles and permissions
 - Invitations
-- Permissions
+- Ownership transfer
+- Workspace/project integration
 
 ## Sprint 4
 

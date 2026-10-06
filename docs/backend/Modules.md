@@ -24,21 +24,22 @@ docs/backend/features/
 
 # Backend Development Progress
 
-```text
-██████████████████░░░░░░░░░░░░░░░░░░░░░░ 45%
-```
+The backend is currently progressing through **Core Sprint 3 — Collaboration Foundation**.
 
 | Module | Status |
 |---------|--------|
 | Authentication | ✅ Complete |
-| Users | ✅ Complete |
-| Social Graph | 🟡 In Progress |
-| Community | ⬜ Planned |
-| Workspaces | ⬜ Planned |
+| Users & Profiles | ✅ Complete |
+| Social Graph | ✅ Complete |
+| Projects | ✅ Complete |
+| Workspaces | 🟢 Foundation Complete |
+| Workspace Membership | ⬜ Planned |
+| Invitations | ⬜ Planned |
 | Channels | ⬜ Planned |
-| Projects | ⬜ Planned |
 | Notifications | ⬜ Planned |
 | AI | ⬜ Planned |
+
+> **Note:** Workspace foundation is implemented, including the Workspace entity, lifecycle, ownership, visibility, validation, and current API foundation. Membership, invitations, ownership transfer, and workspace/project integration remain deferred to their respective Sprint 3 phases.
 
 ---
 
@@ -54,10 +55,10 @@ Provides secure user authentication and authorization.
 
 - User registration
 - User login
-- User logout
 - JWT authentication
-- Role-based authorization
 - Route protection
+- Password management
+- Request validation
 
 ### Documentation
 
@@ -71,19 +72,19 @@ docs/backend/features/Authentication.md
 
 ---
 
-## Users
+## Users & Profiles
 
 ### Purpose
 
-Manages user accounts and profile information.
+Manages user accounts, profile information, and public developer profiles.
 
 ### Responsibilities
 
 - Current user information
+- Account management
 - Profile management
-- Display name
-- Bio
-- Avatar URL
+- Public developer profiles
+- Profile fields and metadata
 
 ### Documentation
 
@@ -103,7 +104,7 @@ docs/backend/features/Users.md
 
 Manages relationships between users.
 
-### Planned Responsibilities
+### Responsibilities
 
 - Follow user
 - Unfollow user
@@ -111,29 +112,113 @@ Manages relationships between users.
 - Following
 - Relationship validation
 
-### Sprint
-
-Sprint 2
-
 ### Status
 
-🟡 In Progress
+✅ Complete
 
 ---
 
-## Community
+## Projects
+
+### Purpose
+
+Manages developer projects and their project-level collaboration foundation.
+
+### Responsibilities
+
+- Project creation
+- Project retrieval
+- Project updates
+- Project archival
+- Project visibility
+- Project README, license, repository, and live URL metadata
+- Project members
+- Project member management
+- Stars and unstar operations
+
+### Status
+
+✅ Complete for current Core Sprint 2 scope
+
+### Deferred
+
+The following capabilities remain outside the current completed scope:
+
+- Workspace membership integration
+- Workspace-based project authorization
+- Forks
+- Advanced engagement counts
+
+These are addressed by later roadmap phases.
+
+---
+
+## Workspaces
+
+### Purpose
+
+Provides the organizational foundation for workspace-based collaboration.
+
+### Responsibilities
+
+- Workspace creation
+- Workspace retrieval
+- Workspace updates
+- Workspace ownership
+- Workspace slug generation
+- Workspace visibility
+- Workspace metadata
+- Workspace archiving
+- Workspace soft deletion
+- Owner-only management operations
+- Public/private access behavior
+
+### Current API
+
+```text
+POST   /workspaces
+GET    /workspaces
+GET    /workspaces/:slug
+PATCH  /workspaces/:slug
+PATCH  /workspaces/:slug/archive
+DELETE /workspaces/:slug
+```
+
+### Status
+
+🟢 Foundation Complete
+
+### Deferred
+
+The following capabilities are intentionally deferred to later Sprint 3 phases:
+
+- Workspace membership
+- Member roles and permissions
+- Invitations
+- Ownership transfer
+- Workspace/project integration
+- Member-level authorization
+
+---
+
+## Workspace Membership
+
+### Purpose
+
+Will provide the membership and role-management layer for workspace collaboration.
 
 ### Planned Responsibilities
 
-- Community posts
-- Comments
-- Likes
-- Bookmarks
-- Public feed
+- Workspace members
+- Membership lifecycle
+- Member roles
+- Permission foundation
+- Owner protection
+- Membership-based authorization
 
 ### Sprint
 
-Sprint 3
+Core Sprint 3 — Collaboration Foundation
 
 ### Status
 
@@ -141,18 +226,18 @@ Sprint 3
 
 ---
 
-## Workspaces
+## Invitations
 
 ### Planned Responsibilities
 
-- Workspace management
-- Invitations
-- Workspace roles
-- Member management
+- Workspace invitations
+- Invitation lifecycle
+- Invitation acceptance/rejection
+- Membership creation through invitations
 
 ### Sprint
 
-Sprint 4
+Core Sprint 3 — Collaboration Foundation
 
 ### Status
 
@@ -169,29 +254,6 @@ Sprint 4
 - Attachments
 - Permissions
 
-### Sprint
-
-Sprint 5
-
-### Status
-
-⬜ Planned
-
----
-
-## Projects
-
-### Planned Responsibilities
-
-- Project management
-- Project members
-- Project visibility
-- Project status
-
-### Sprint
-
-Sprint 6
-
 ### Status
 
 ⬜ Planned
@@ -206,10 +268,6 @@ Sprint 6
 - Mentions
 - Activity notifications
 - Notification preferences
-
-### Sprint
-
-Sprint 7
 
 ### Status
 
@@ -226,10 +284,6 @@ Sprint 7
 - Documentation generation
 - Project assistant
 
-### Sprint
-
-Sprint 8
-
 ### Status
 
 ⬜ Planned
@@ -242,35 +296,43 @@ Sprint 8
 Authentication
         │
         ▼
-Users
+Users & Profiles
         │
-        ▼
-Social Graph
-        │
-        ▼
-Community
-        │
-        ├─────────────┐
-        ▼             ▼
-Workspaces      Notifications
-        │
-        ▼
-Channels
+        ├──────────────► Social Graph
         │
         ▼
 Projects
         │
         ▼
+Workspaces
+        │
+        ▼
+Workspace Membership
+        │
+        ├──────────────► Invitations
+        │
+        ▼
+Workspace / Project Integration
+        │
+        ▼
+Channels
+        │
+        ▼
+Notifications
+        │
+        ▼
 AI
 ```
 
-Each module builds on previously completed functionality while maintaining clear boundaries.
+Each module should maintain clear boundaries while building on the foundations established by earlier modules.
+
+> The dependency diagram represents the current product architecture and roadmap direction. It does not imply that every later dependency has already been implemented.
 
 ---
 
 # Documentation Policy
 
-Each backend feature module must have its own implementation document.
+Each backend feature module should have its own implementation document where applicable.
 
 Every feature document should include:
 
@@ -286,20 +348,19 @@ Every feature document should include:
 - Testing status
 - Future improvements
 
+Documentation must reflect the current implementation state and clearly distinguish implemented functionality from deferred roadmap work.
+
 ---
 
 # Sprint History
 
-| Sprint | Modules Completed |
-|---------|-------------------|
-| Sprint 1 | Authentication, Users |
-| Sprint 2 | Social Graph *(In Progress)* |
-| Sprint 3 | — |
-| Sprint 4 | — |
-| Sprint 5 | — |
-| Sprint 6 | — |
-| Sprint 7 | — |
-| Sprint 8 | — |
+| Sprint | Modules / Scope |
+|---------|-----------------|
+| Core Sprint 0 | Backend foundation, Prisma, PostgreSQL, configuration, validation |
+| Core Sprint 1 | Authentication, Users & Profiles, Social Graph |
+| Core Sprint 2 | Projects, Project Members, Stars |
+| Core Sprint 3 | Workspace foundation in progress; membership and collaboration phases next |
+| Core Sprint 4+ | Future collaboration, communication, notification, AI, and other planned capabilities |
 
 ---
 

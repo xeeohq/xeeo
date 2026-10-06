@@ -338,7 +338,7 @@ Build the workspace organizational layer and integrate it with the existing proj
 
 ### Status
 
-🟡 In Progress
+🟢 Foundation Complete
 
 ### Goal
 
@@ -403,16 +403,36 @@ Establish the Workspace foundation, lifecycle, ownership model, and APIs require
 
 ### Remaining
 
-#### Workspace Operations
+#### Workspace Ownership
 
-- Workspace creation API
-- Workspace retrieval API
-- Workspace update API
-- Workspace ownership operations
-- Workspace lifecycle operations
-- Workspace archive behavior
-- Workspace soft-delete behavior
-- Workspace access rules
+- Workspace ownership transfer workflow
+
+#### Workspace Integration
+
+- Workspace membership integration
+
+Ownership transfer is intentionally deferred until Workspace Membership is implemented, because complete ownership transfer requires membership and role management.
+
+---
+
+### Validation & Testing
+
+- Workspace DTO validation
+- Workspace creation and retrieval validation
+- Workspace update validation
+- Workspace archive validation
+- Workspace soft-delete validation
+- Owner-only authorization checks
+- Private workspace access protection
+- Public workspace access verification
+- Not-found handling
+- Archived workspace update protection
+- Duplicate archive protection
+- Duplicate soft-delete protection
+- Empty update validation
+- Workspace service unit tests
+- 20 workspace service tests passing
+- TypeScript typecheck passing
 
 ### Phase Completion Criteria
 
