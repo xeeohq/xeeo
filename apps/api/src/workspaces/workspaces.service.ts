@@ -14,26 +14,35 @@ BadRequestException,
       private readonly prisma: PrismaService,
     ) {}
   
-    async create(
-      userId: string,
-      createWorkspaceDto: CreateWorkspaceDto,
-    ) {
-      const slug = createWorkspaceDto.name
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-  
-      return this.prisma.workspace.create({
-        data: {
-          ownerId: userId,
-          name: createWorkspaceDto.name.trim(),
-          slug,
-          description: createWorkspaceDto.description,
-          visibility: createWorkspaceDto.visibility,
+    
+  async create(
+    userId: string,
+    createWorkspaceDto: CreateWorkspaceDto,
+  ) {
+    const slug = createWorkspaceDto.name
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+    return this.prisma.workspace.create({
+      data: {
+        ownerId: userId,
+        name: createWorkspaceDto.name.trim(),
+        slug,
+        description: createWorkspaceDto.description,
+        visibility: createWorkspaceDto.visibility,
+        members: {
+          create: {
+            userId,
+            role: 'OWNER',
+            status: 'ACTIVE',
+          },
         },
-      });
-    }
+      },
+    });
+  }
+
 
     async findAllByOwner(userId: string) {
         return this.prisma.workspace.findMany({
@@ -73,6 +82,77 @@ BadRequestException,
       
         return workspace;
       }
+
+      
+  async findMembersBySlug(
+    userId: string,
+    slug: string,
+  ) {
+    const workspace = await this.prisma.workspace.findFirst({
+      where: {
+        slug,
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+        ownerId: true,
+      },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException('Workspace not found.');
+    }
+
+    const membership = await this.prisma.workspaceMember.findUnique({
+      where: {
+        workspaceId_userId: {
+          workspaceId: workspace.id,
+          userId,
+        },
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (
+      !membership ||
+      membership.status !== 'ACTIVE'
+    ) {
+      throw new ForbiddenException(
+        'You do not have access to this workspace.',
+      );
+    }
+
+    return this.prisma.workspaceMember.findMany({
+      where: {
+        workspaceId: workspace.id,
+        status: 'ACTIVE',
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+      select: {
+        userId: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            profile: {
+              select: {
+                displayName: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
 
     async update(
         userId: string,

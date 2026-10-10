@@ -20,6 +20,10 @@ describe('WorkspacesService', () => {
       findUnique: jest.fn(),
       update: jest.fn(),
     },
+    workspaceMember: {
+        findUnique: jest.fn(),
+        findMany: jest.fn(),
+      },
   };
 
   beforeEach(async () => {
@@ -58,6 +62,8 @@ describe('WorkspacesService', () => {
         description: 'Development workspace',
       });
 
+      expect(prismaMock.workspace.create).toHaveBeenCalledTimes(1);
+
       expect(prismaMock.workspace.create).toHaveBeenCalledWith({
         data: {
           ownerId: 'user-1',
@@ -65,6 +71,13 @@ describe('WorkspacesService', () => {
           slug: 'xeeo-development',
           description: 'Development workspace',
           visibility: undefined,
+          members: {
+            create: {
+              userId: 'user-1',
+              role: 'OWNER',
+              status: 'ACTIVE',
+            },
+          },
         },
       });
 
@@ -167,6 +180,85 @@ describe('WorkspacesService', () => {
       ).rejects.toThrow(NotFoundException);
     });
   });
+
+  
+describe('findMembersBySlug', () => {
+  const workspace = {
+    id: 'workspace-1',
+    ownerId: 'user-1',
+  };
+
+  it('should return active members to an active member', async () => {
+    const members = [
+      {
+        userId: 'user-1',
+        role: 'OWNER',
+        status: 'ACTIVE',
+        createdAt: new Date(),
+        user: {
+          id: 'user-1',
+          username: 'suraj',
+          profile: {
+            displayName: 'Suraj',
+            avatarUrl: null,
+          },
+        },
+      },
+    ];
+
+    prismaMock.workspace.findFirst.mockResolvedValue(workspace);
+    prismaMock.workspaceMember.findUnique.mockResolvedValue({
+      status: 'ACTIVE',
+    });
+    prismaMock.workspaceMember.findMany.mockResolvedValue(members);
+
+    const result = await service.findMembersBySlug(
+      'user-1',
+      'xeeo-development',
+    );
+
+    expect(result).toEqual(members);
+  });
+
+  it('should reject a user who is not a member', async () => {
+    prismaMock.workspace.findFirst.mockResolvedValue(workspace);
+    prismaMock.workspaceMember.findUnique.mockResolvedValue(null);
+
+    await expect(
+      service.findMembersBySlug('user-2', 'xeeo-development'),
+    ).rejects.toThrow(
+      'You do not have access to this workspace.',
+    );
+
+    expect(prismaMock.workspaceMember.findMany).not.toHaveBeenCalled();
+  });
+
+  it('should reject a suspended member', async () => {
+    prismaMock.workspace.findFirst.mockResolvedValue(workspace);
+    prismaMock.workspaceMember.findUnique.mockResolvedValue({
+      status: 'SUSPENDED',
+    });
+
+    await expect(
+      service.findMembersBySlug('user-1', 'xeeo-development'),
+    ).rejects.toThrow(
+      'You do not have access to this workspace.',
+    );
+
+    expect(prismaMock.workspaceMember.findMany).not.toHaveBeenCalled();
+  });
+
+  it('should reject a missing workspace', async () => {
+    prismaMock.workspace.findFirst.mockResolvedValue(null);
+
+    await expect(
+      service.findMembersBySlug('user-1', 'missing-workspace'),
+    ).rejects.toThrow(NotFoundException);
+
+    expect(prismaMock.workspaceMember.findUnique).not.toHaveBeenCalled();
+  });
+});
+
 
   describe('update', () => {
     it('should update a workspace owned by the user', async () => {

@@ -58,6 +58,19 @@ findBySlug(
   );
 }
 
+
+  @Get(':slug/members')
+  findMembers(
+    @CurrentUser() user,
+    @Param('slug') slug: string,
+  ) {
+    return this.workspacesService.findMembersBySlug(
+      user.id,
+      slug,
+    );
+  }
+
+
 @Patch(':slug/archive')
 archive(
   @CurrentUser() user,

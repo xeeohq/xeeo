@@ -195,7 +195,11 @@ Authorization: Bearer <access_token>
 
 # Workspaces
 
-The Workspace API establishes the organizational foundation for workspace-based collaboration. The current implementation covers workspace creation, retrieval, owner-controlled updates, archive lifecycle, soft deletion, and basic public/private visibility. Membership-based authorization and ownership transfer are deferred to later phases.
+
+The Workspace API establishes the organizational foundation for workspace-based collaboration. The current implementation covers workspace creation, retrieval, owner-controlled updates, archive lifecycle, soft deletion, and workspace member listing for active members. Workspace creation automatically creates an OWNER membership for the workspace creator in the same atomic database operation.
+
+Membership management, role assignment, invitations, ownership transfer, and workspace/project authorization integration remain in progress or deferred to their corresponding phases.
+
 
 ## Create Workspace
 
@@ -286,15 +290,49 @@ Soft-deletes the workspace by setting `deletedAt`.
 
 Permanent deletion and restoration are not part of the current Workspace API foundation.
 
+
+## List Workspace Members
+
+```http
+GET /workspaces/:slug/members
+```
+
+Authentication Required
+
+Active Workspace Members Only
+
+Returns the active memberships for the specified workspace.
+
+Each member entry includes:
+
+- userId
+- role
+- status
+- createdAt
+- User ID and username
+- Profile display name and avatar URL
+
+Access rules:
+
+- The workspace must exist and must not be soft-deleted.
+- Only active workspace members can list members.
+- Suspended members and non-members receive `403 Forbidden`.
+- Missing or soft-deleted workspaces return `404 Not Found`.
+- Only active memberships are included in the result.
+
+
 ## Workspace API Limitations
 
-The following capabilities are intentionally deferred:
 
-- Workspace membership
-- Member roles and permissions
+The following capabilities are intentionally deferred or incomplete:
+
+- Adding and removing workspace members
+- Updating member roles and membership status
+- Role-based permissions beyond the current active-membership access check
 - Invitations
 - Ownership transfer
 - Workspace/project authorization integration
+
 
 These capabilities will be implemented in the corresponding later phases of Core Sprint 3.
 
