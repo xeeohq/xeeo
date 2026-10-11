@@ -3,10 +3,12 @@ import {
     NotFoundException,
     ForbiddenException,
 BadRequestException,
+ConflictException,
   } from '@nestjs/common';
   import { PrismaService } from '../prisma/prisma.service';
   import { CreateWorkspaceDto } from './dto/create-workspace.dto';
   import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
+  import { AddWorkspaceMemberDto } from './dto/add-workspace-member.dto';
   
   @Injectable()
   export class WorkspacesService {
@@ -248,4 +250,92 @@ BadRequestException,
           },
         });
       }
+
+      
+      async addMember(
+        ownerId: string,
+        slug: string,
+        dto: AddWorkspaceMemberDto,
+      ) {
+        const workspace = await this.prisma.workspace.findUnique({
+          where: { slug },
+        });
+      
+        if (!workspace || workspace.deletedAt) {
+          throw new NotFoundException('Workspace not found.');
+        }
+      
+        if (workspace.ownerId !== ownerId) {
+          throw new ForbiddenException(
+            'You are not the owner of this workspace.',
+          );
+        }
+      
+        if (workspace.isArchived) {
+          throw new BadRequestException(
+            'Archived workspaces cannot have members added.',
+          );
+        }
+      
+        if (dto.role === 'OWNER') {
+          throw new BadRequestException(
+            'The OWNER role cannot be assigned through member management.',
+          );
+        }
+      
+        const user = await this.prisma.user.findUnique({
+          where: { id: dto.userId },
+          select: { id: true },
+        });
+      
+        if (!user) {
+          throw new NotFoundException('User not found.');
+        }
+      
+        const existingMember =
+          await this.prisma.workspaceMember.findUnique({
+            where: {
+              workspaceId_userId: {
+                workspaceId: workspace.id,
+                userId: dto.userId,
+              },
+            },
+          });
+      
+        if (existingMember) {
+          throw new ConflictException(
+            'User is already a member of this workspace.',
+          );
+        }
+      
+        return this.prisma.workspaceMember.create({
+          data: {
+            workspaceId: workspace.id,
+            userId: dto.userId,
+            role: dto.role,
+            status: 'ACTIVE',
+          },
+          select: {
+            workspaceId: true,
+            userId: true,
+            role: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                profile: {
+                  select: {
+                    displayName: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+      
   }

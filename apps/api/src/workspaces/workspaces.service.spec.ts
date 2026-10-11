@@ -23,6 +23,10 @@ describe('WorkspacesService', () => {
     workspaceMember: {
         findUnique: jest.fn(),
         findMany: jest.fn(),
+        create: jest.fn(),
+      },
+      user: {
+        findUnique: jest.fn(),
       },
   };
 
@@ -258,6 +262,124 @@ describe('findMembersBySlug', () => {
     expect(prismaMock.workspaceMember.findUnique).not.toHaveBeenCalled();
   });
 });
+
+
+describe('addMember', () => {
+    
+  it('should add a member to a workspace owned by the user', async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+        id: 'user-2',
+      });
+    const workspace = {
+      id: 'workspace-1',
+      ownerId: 'user-1',
+      deletedAt: null,
+      isArchived: false,
+    };
+
+    const createdMembership = {
+      workspaceId: 'workspace-1',
+      userId: 'user-2',
+      role: 'MEMBER',
+      status: 'ACTIVE',
+    };
+
+    prismaMock.workspace.findUnique.mockResolvedValue(workspace);
+prismaMock.workspaceMember.findUnique.mockResolvedValue(null);
+prismaMock.workspaceMember.create.mockResolvedValue(createdMembership);
+
+    const result = await service.addMember(
+      'user-1',
+      'xeeo-development',
+      {
+        userId: 'user-2',
+        role: 'MEMBER',
+      },
+    );
+
+    expect(prismaMock.workspaceMember.create).toHaveBeenCalledWith({
+      data: {
+        workspaceId: 'workspace-1',
+        userId: 'user-2',
+        role: 'MEMBER',
+        status: 'ACTIVE',
+      },
+      select: expect.any(Object),
+    });
+
+    expect(result).toEqual(createdMembership);
+  });
+
+  
+  it('should reject adding a member when the workspace does not exist', async () => {
+    prismaMock.workspace.findUnique.mockResolvedValue(null);
+
+    await expect(
+      service.addMember('user-1', 'missing-workspace', {
+        userId: 'user-2',
+        role: 'MEMBER',
+      }),
+    ).rejects.toThrow(NotFoundException);
+
+    expect(prismaMock.workspaceMember.create).not.toHaveBeenCalled();
+  });
+
+  it('should reject adding a member by a non-owner', async () => {
+    prismaMock.workspace.findUnique.mockResolvedValue({
+      id: 'workspace-1',
+      ownerId: 'user-1',
+      deletedAt: null,
+      isArchived: false,
+    });
+
+    await expect(
+      service.addMember('user-2', 'xeeo-development', {
+        userId: 'user-3',
+        role: 'MEMBER',
+      }),
+    ).rejects.toThrow(ForbiddenException);
+
+    expect(prismaMock.workspaceMember.create).not.toHaveBeenCalled();
+  });
+
+  it('should reject adding a member to an archived workspace', async () => {
+    prismaMock.workspace.findUnique.mockResolvedValue({
+      id: 'workspace-1',
+      ownerId: 'user-1',
+      deletedAt: null,
+      isArchived: true,
+    });
+
+    await expect(
+      service.addMember('user-1', 'xeeo-development', {
+        userId: 'user-2',
+        role: 'MEMBER',
+      }),
+    ).rejects.toThrow(BadRequestException);
+
+    expect(prismaMock.workspaceMember.create).not.toHaveBeenCalled();
+  });
+
+  it('should reject assigning the OWNER role through member management', async () => {
+    prismaMock.workspace.findUnique.mockResolvedValue({
+      id: 'workspace-1',
+      ownerId: 'user-1',
+      deletedAt: null,
+      isArchived: false,
+    });
+
+    await expect(
+      service.addMember('user-1', 'xeeo-development', {
+        userId: 'user-2',
+        role: 'OWNER',
+      }),
+    ).rejects.toThrow(BadRequestException);
+
+    expect(prismaMock.workspaceMember.create).not.toHaveBeenCalled();
+  });
+
+});
+
 
 
   describe('update', () => {
